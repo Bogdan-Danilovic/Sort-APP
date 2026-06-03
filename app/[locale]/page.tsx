@@ -21,7 +21,7 @@ export default async function HomePage({ params }: HomePageProps) {
     >
       {/* Nav */}
       <nav
-        className="flex items-center justify-between px-8 py-5"
+        className="flex items-center justify-between px-5 sm:px-8 py-4 sm:py-5"
         style={{ borderBottom: '1px solid #111111' }}
       >
         <MergeKitLogo locale={locale} href={`/${locale}`} />
@@ -49,7 +49,7 @@ export default async function HomePage({ params }: HomePageProps) {
       </nav>
 
       {/* Hero */}
-      <section className="flex flex-col items-center justify-center px-6 pt-28 pb-24 text-center">
+      <section className="flex flex-col items-center justify-center px-5 sm:px-6 pt-14 sm:pt-28 pb-12 sm:pb-24 text-center">
         {/* Badge */}
         <div
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-10"
@@ -137,7 +137,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
       {/* How it works */}
       <section
-        className="px-8 py-20"
+        className="px-5 sm:px-8 py-12 sm:py-20"
         style={{ borderTop: '1px solid #111111', borderBottom: '1px solid #111111' }}
       >
         <div className="max-w-4xl mx-auto">
@@ -215,7 +215,7 @@ export default async function HomePage({ params }: HomePageProps) {
       </section>
 
       {/* Features */}
-      <section className="px-8 py-20">
+      <section className="px-5 sm:px-8 py-12 sm:py-20">
         <div className="max-w-4xl mx-auto">
           <p
             className="text-xs font-semibold uppercase tracking-widest text-center mb-4"
@@ -284,10 +284,10 @@ export default async function HomePage({ params }: HomePageProps) {
       </section>
 
       {/* CTA Banner */}
-      <section className="px-8 pb-20">
+      <section className="px-5 sm:px-8 pb-12 sm:pb-20">
         <div className="max-w-4xl mx-auto">
           <div
-            className="rounded-2xl p-10 text-center"
+            className="rounded-2xl p-8 sm:p-10 text-center"
             style={{
               background: 'linear-gradient(135deg, #0d1a3a 0%, #0a1428 100%)',
               border: '1px solid rgba(58,129,246,0.2)',

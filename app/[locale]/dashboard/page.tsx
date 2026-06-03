@@ -88,7 +88,7 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
           className="rounded-2xl overflow-hidden"
           style={{ background: '#0d1a3a', border: '1px solid rgba(58,129,246,0.15)' }}
         >
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 p-8 sm:p-10">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 p-6 sm:p-10">
             {/* Left: avatar + greeting */}
             <div className="flex items-center gap-5">
               <div
@@ -180,7 +180,7 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
             return (
               <div
                 key={stat.label}
-                className="p-7 rounded-2xl"
+                className="p-5 sm:p-7 rounded-2xl"
                 style={{
                   background: '#0e0e0e',
                   border: '1px solid #1a1a1a',
@@ -279,29 +279,29 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
                   <tr style={{ borderBottom: '1px solid #141414' }}>
                     <th
                       className="text-left text-xs font-semibold uppercase tracking-wider"
-                      style={{ color: '#2a2a2a', padding: '16px 24px' }}
+                      style={{ color: '#2a2a2a', padding: '14px 16px' }}
                     >
                       Naziv sesije
                     </th>
                     <th
                       className="text-right text-xs font-semibold uppercase tracking-wider"
-                      style={{ color: '#2a2a2a', padding: '16px 24px' }}
+                      style={{ color: '#2a2a2a', padding: '14px 16px' }}
                     >
                       Proizvodi
                     </th>
                     <th
                       className="text-right text-xs font-semibold uppercase tracking-wider hidden sm:table-cell"
-                      style={{ color: '#2a2a2a', padding: '16px 24px' }}
+                      style={{ color: '#2a2a2a', padding: '14px 16px' }}
                     >
                       Fajlovi
                     </th>
                     <th
-                      className="text-left text-xs font-semibold uppercase tracking-wider"
-                      style={{ color: '#2a2a2a', padding: '16px 24px' }}
+                      className="text-left text-xs font-semibold uppercase tracking-wider hidden sm:table-cell"
+                      style={{ color: '#2a2a2a', padding: '14px 16px' }}
                     >
                       Kada
                     </th>
-                    <th style={{ padding: '16px 24px' }} />
+                    <th style={{ padding: '14px 16px' }} />
                   </tr>
                 </thead>
                 <tbody>
@@ -320,7 +320,7 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
                           borderBottom: i < typedSessions.length - 1 ? '1px solid #141414' : 'none',
                         }}
                       >
-                        <td style={{ padding: '18px 24px' }}>
+                        <td style={{ padding: '14px 16px' }}>
                           <span
                             className="font-medium text-sm"
                             style={{ color: '#e0e0e0' }}
@@ -330,17 +330,17 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
                         </td>
                         <td
                           className="text-right font-mono text-sm"
-                          style={{ padding: '18px 24px', color: '#a1a1a1' }}
+                          style={{ padding: '14px 16px', color: '#a1a1a1' }}
                         >
                           {productCount}
                         </td>
                         <td
                           className="text-right font-mono text-sm hidden sm:table-cell"
-                          style={{ padding: '18px 24px', color: '#525252' }}
+                          style={{ padding: '14px 16px', color: '#525252' }}
                         >
                           {fileCount}
                         </td>
-                        <td style={{ padding: '18px 24px' }}>
+                        <td className="hidden sm:table-cell" style={{ padding: '14px 16px' }}>
                           <span
                             className="text-xs font-mono"
                             style={{ color: '#3a3a3a' }}
@@ -349,7 +349,7 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
                             {timeAgo(s.created_at)}
                           </span>
                         </td>
-                        <td className="text-right" style={{ padding: '18px 24px' }}>
+                        <td className="text-right" style={{ padding: '14px 16px' }}>
                           <Link
                             href={`/${locale}/history`}
                             className="text-xs font-medium inline-flex items-center gap-1"

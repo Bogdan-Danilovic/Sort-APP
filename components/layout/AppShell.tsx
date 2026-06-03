@@ -14,7 +14,7 @@ export default function AppShell({ children, locale, userEmail }: AppShellProps)
 
       <main className="app-main">
         {/* pb na mobilnom = 60px dock + safe area + buffer */}
-        <div className="min-h-full p-4 md:p-6" style={{ paddingBottom: 'calc(var(--dock-h) + env(safe-area-inset-bottom) + 16px)' }}>
+        <div className="min-h-full px-4 py-5 sm:px-6 md:px-8 md:py-8" style={{ paddingBottom: 'calc(var(--dock-h) + env(safe-area-inset-bottom) + 24px)' }}>
           {children}
         </div>
       </main>
