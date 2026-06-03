@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans, DM_Sans, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
+import flavorAliases from '@/lib/flavorAliases.json';
+import { initFlavorMap } from '@/lib/normalizer';
+
+initFlavorMap(flavorAliases);
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin', 'latin-ext'],

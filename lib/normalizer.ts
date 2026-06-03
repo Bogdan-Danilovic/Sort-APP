@@ -208,6 +208,7 @@ export function runNormalizerTests(): boolean {
 
 export type FlavorEntry = {
   canonical: string;
+  display?: string;
   aliases: string[];
 };
 
@@ -223,6 +224,9 @@ export function initFlavorMap(entries: FlavorEntry[]): void {
   _flavorMap = new Map<string, string>();
   for (const entry of entries) {
     _flavorMap.set(normalizeProductName(entry.canonical), entry.canonical);
+    if (entry.display) {
+      _flavorMap.set(normalizeProductName(entry.display), entry.canonical);
+    }
     for (const alias of entry.aliases) {
       _flavorMap.set(normalizeProductName(alias), entry.canonical);
     }
@@ -286,10 +290,34 @@ export function getFlavorAliases(name: string): string[] {
  * Vraća canonical naziv za prikaz u tabeli.
  * Ako ukus nije prepoznat, vraća formatovano originalno ime.
  */
+function toTitleCase(str: string): string {
+  return str.replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+/**
+ * Vraća sve sinonime za prepoznati ukus spojene sa ' / ' u Title Case.
+ * Ako ukus nije prepoznat, vraća formatovano originalno ime.
+ *
+ * @example
+ * buildFlavorDisplayName("malina kola")
+ * // → "Raspberry Coke / Malina Kola / Malina / Raspberry"
+ */
 export function buildFlavorDisplayName(name: string): string {
   const canonical = getFlavorCanonical(name);
-  if (canonical !== null) return canonical;
-  return formatDisplayName(name);
+  if (canonical === null) return formatDisplayName(name);
+
+  const entry = _flavorEntries.find(
+    (e) => normalizeProductName(e.canonical) === normalizeProductName(canonical)
+  );
+  if (!entry) return toTitleCase(canonical);
+
+  // display field is the primary name; prepend it and deduplicate
+  const primary = entry.display ?? toTitleCase(entry.canonical);
+  const rest = entry.aliases
+    .map(toTitleCase)
+    .filter((a) => a.toLowerCase() !== primary.toLowerCase());
+  const unique = [...new Set([primary, ...rest])];
+  return unique.join(' / ');
 }
 
 /**
