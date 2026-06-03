@@ -47,14 +47,11 @@ export default function SettingsClient({
           theme: settings.theme,
         },
       });
-
       if (error) throw error;
-
       if (settings.locale !== locale) {
         router.push(`/${settings.locale}/settings`);
         return;
       }
-
       setSaveStatus('success');
       setTimeout(() => setSaveStatus('idle'), 3000);
     } catch {
@@ -86,104 +83,122 @@ export default function SettingsClient({
   };
 
   const inputStyle = {
-    background: '#1a1a1a',
-    border: '1px solid #262626',
-    color: '#fafafa',
-  };
-
-  const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
-    <div className="rounded-xl overflow-hidden" style={{ border: '1px solid #1f1f1f' }}>
-      <div
-        className="px-5 py-3 text-xs font-semibold uppercase tracking-wider"
-        style={{ background: '#111111', borderBottom: '1px solid #1f1f1f', color: '#525252' }}
-      >
-        {title}
-      </div>
-      <div className="p-5 space-y-4" style={{ background: '#0a0a0a' }}>
-        {children}
-      </div>
-    </div>
-  );
-
-  const Field = ({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) => (
-    <div className="flex items-start justify-between gap-4">
-      <div className="flex-1">
-        <label className="block text-sm font-medium" style={{ color: '#d4d4d4' }}>{label}</label>
-        {hint && <p className="text-xs mt-0.5" style={{ color: '#525252' }}>{hint}</p>}
-      </div>
-      <div className="flex-shrink-0 w-52">{children}</div>
-    </div>
-  );
+    background: '#0c0c12',
+    border: '1px solid #141420',
+    color: '#c8c8d8',
+    borderRadius: 10,
+    padding: '10px 12px',
+    fontSize: 14,
+    width: '100%',
+    outline: 'none',
+    transition: 'border-color 150ms ease',
+  } as const;
 
   return (
-    <div className="space-y-4">
-      {/* Company */}
-      <Section title={t('company.title')}>
-        <Field label={t('company.name')} hint={t('company.nameHint')}>
-          <input
-            type="text"
-            value={settings.companyName}
-            onChange={(e) => update('companyName', e.target.value)}
-            placeholder={t('company.namePlaceholder')}
-            className="w-full px-3 py-2 rounded-lg text-sm focus:outline-none transition-colors"
-            style={inputStyle}
-            onFocus={(e) => { e.target.style.borderColor = '#3a81f6'; }}
-            onBlur={(e) => { e.target.style.borderColor = '#262626'; }}
-          />
-        </Field>
+    <div className="space-y-4" style={{ maxWidth: 640 }}>
 
-        <Field label={t('company.currency')}>
-          <select
-            value={settings.defaultCurrency}
-            onChange={(e) => update('defaultCurrency', e.target.value as 'din' | 'eur' | 'usd')}
-            className="w-full px-3 py-2 rounded-lg text-sm focus:outline-none"
-            style={inputStyle}
-          >
-            <option value="din">{t('company.currencies.din')}</option>
-            <option value="eur">{t('company.currencies.eur')}</option>
-            <option value="usd">{t('company.currencies.usd')}</option>
-          </select>
-        </Field>
-      </Section>
+      {/* ── Company ───────────────────────────────────── */}
+      <div className="rounded-2xl overflow-hidden" style={{ background: '#0c0c12', border: '1px solid #141420' }}>
+        <div style={{ padding: '12px 20px', borderBottom: '1px solid #101018' }}>
+          <p style={{ color: '#252535', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            {t('company.title')}
+          </p>
+        </div>
+        <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+          {/* Company name */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+            <div style={{ flex: 1 }}>
+              <p style={{ color: '#a0a0b8', fontWeight: 500, fontSize: 14, marginBottom: 2 }}>{t('company.name')}</p>
+              <p style={{ color: '#252535', fontSize: 12, lineHeight: 1.4 }}>{t('company.nameHint')}</p>
+            </div>
+            <input
+              type="text"
+              value={settings.companyName}
+              onChange={(e) => update('companyName', e.target.value)}
+              placeholder={t('company.namePlaceholder')}
+              style={{ ...inputStyle, maxWidth: '100%' }}
+              className="sm:w-52"
+              onFocus={(e) => { e.target.style.borderColor = 'rgba(58,129,246,0.4)'; }}
+              onBlur={(e) => { e.target.style.borderColor = '#141420'; }}
+            />
+          </div>
+          {/* Currency */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+            <div style={{ flex: 1 }}>
+              <p style={{ color: '#a0a0b8', fontWeight: 500, fontSize: 14 }}>{t('company.currency')}</p>
+            </div>
+            <select
+              value={settings.defaultCurrency}
+              onChange={(e) => update('defaultCurrency', e.target.value as 'din' | 'eur' | 'usd')}
+              style={inputStyle}
+              className="sm:w-52 cursor-pointer"
+              onFocus={(e) => { e.target.style.borderColor = 'rgba(58,129,246,0.4)'; }}
+              onBlur={(e) => { e.target.style.borderColor = '#141420'; }}
+            >
+              <option value="din">{t('company.currencies.din')}</option>
+              <option value="eur">{t('company.currencies.eur')}</option>
+              <option value="usd">{t('company.currencies.usd')}</option>
+            </select>
+          </div>
+        </div>
+      </div>
 
-      {/* Preferences */}
-      <Section title={t('preferences.title')}>
-        <Field label={t('preferences.language')}>
-          <select
-            value={settings.locale}
-            onChange={(e) => update('locale', e.target.value as 'sr' | 'en')}
-            className="w-full px-3 py-2 rounded-lg text-sm focus:outline-none"
-            style={inputStyle}
-          >
-            <option value="sr">{t('preferences.languages.sr')}</option>
-            <option value="en">{t('preferences.languages.en')}</option>
-          </select>
-        </Field>
+      {/* ── Preferences ───────────────────────────────── */}
+      <div className="rounded-2xl overflow-hidden" style={{ background: '#0c0c12', border: '1px solid #141420' }}>
+        <div style={{ padding: '12px 20px', borderBottom: '1px solid #101018' }}>
+          <p style={{ color: '#252535', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            {t('preferences.title')}
+          </p>
+        </div>
+        <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+          {/* Language */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+            <div style={{ flex: 1 }}>
+              <p style={{ color: '#a0a0b8', fontWeight: 500, fontSize: 14 }}>{t('preferences.language')}</p>
+            </div>
+            <select
+              value={settings.locale}
+              onChange={(e) => update('locale', e.target.value as 'sr' | 'en')}
+              style={inputStyle}
+              className="sm:w-52 cursor-pointer"
+              onFocus={(e) => { e.target.style.borderColor = 'rgba(58,129,246,0.4)'; }}
+              onBlur={(e) => { e.target.style.borderColor = '#141420'; }}
+            >
+              <option value="sr">{t('preferences.languages.sr')}</option>
+              <option value="en">{t('preferences.languages.en')}</option>
+            </select>
+          </div>
+          {/* Theme */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+            <div style={{ flex: 1 }}>
+              <p style={{ color: '#a0a0b8', fontWeight: 500, fontSize: 14 }}>{t('preferences.theme')}</p>
+            </div>
+            <select
+              value={settings.theme}
+              onChange={(e) => update('theme', e.target.value as 'dark' | 'light' | 'system')}
+              style={inputStyle}
+              className="sm:w-52 cursor-pointer"
+              onFocus={(e) => { e.target.style.borderColor = 'rgba(58,129,246,0.4)'; }}
+              onBlur={(e) => { e.target.style.borderColor = '#141420'; }}
+            >
+              <option value="dark">{t('preferences.themes.dark')}</option>
+              <option value="light">{t('preferences.themes.light')}</option>
+              <option value="system">{t('preferences.themes.system')}</option>
+            </select>
+          </div>
+        </div>
+      </div>
 
-        <Field label={t('preferences.theme')}>
-          <select
-            value={settings.theme}
-            onChange={(e) => update('theme', e.target.value as 'dark' | 'light' | 'system')}
-            className="w-full px-3 py-2 rounded-lg text-sm focus:outline-none"
-            style={inputStyle}
-          >
-            <option value="dark">{t('preferences.themes.dark')}</option>
-            <option value="light">{t('preferences.themes.light')}</option>
-            <option value="system">{t('preferences.themes.system')}</option>
-          </select>
-        </Field>
-      </Section>
-
-      {/* Save button */}
-      <div className="flex items-center justify-between">
-        <div>
+      {/* ── Save ──────────────────────────────────────── */}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
+        <div style={{ minHeight: 20 }}>
           {saveStatus === 'success' && (
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-xs" style={{ color: '#34d399' }}>
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ color: '#34d399', fontSize: 13 }}>
               ✓ {t('saveSuccess')}
             </motion.p>
           )}
           {saveStatus === 'error' && (
-            <p className="text-xs" style={{ color: '#f87171' }}>{t('saveError')}</p>
+            <p style={{ color: '#f87171', fontSize: 13 }}>{t('saveError')}</p>
           )}
         </div>
         <motion.button
@@ -191,44 +206,50 @@ export default function SettingsClient({
           onClick={handleSave}
           disabled={saving}
           whileTap={{ scale: 0.97 }}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium disabled:opacity-40 cursor-pointer"
-          style={{ background: 'linear-gradient(135deg, #2563ef, #3a81f6)', color: '#ffffff' }}
+          className="flex items-center justify-center gap-2 rounded-xl disabled:opacity-40 cursor-pointer"
+          style={{ background: 'linear-gradient(135deg,#2563ef,#3a81f6)', color: '#fff',
+            padding: '13px 24px', fontWeight: 600, fontSize: 14 }}
         >
           {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} strokeWidth={2} />}
           {saving ? 'Čuvanje...' : t('save')}
         </motion.button>
       </div>
 
-      {/* Danger zone */}
-      <div className="rounded-xl overflow-hidden" style={{ border: '1px solid rgba(231,0,11,0.3)' }}>
-        <div
-          className="px-5 py-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider"
-          style={{ background: 'rgba(231,0,11,0.05)', borderBottom: '1px solid rgba(231,0,11,0.2)', color: '#f87171' }}
-        >
-          <AlertTriangle size={13} strokeWidth={2} />
-          {t('danger.title')}
+      {/* ── Danger zone ───────────────────────────────── */}
+      <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(231,0,11,0.2)' }}>
+        <div style={{ padding: '12px 20px', borderBottom: '1px solid rgba(231,0,11,0.15)',
+          background: 'rgba(231,0,11,0.04)', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <AlertTriangle size={13} style={{ color: '#f87171' }} strokeWidth={2} />
+          <p style={{ color: '#f87171', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            {t('danger.title')}
+          </p>
         </div>
-        <div className="p-5 space-y-4" style={{ background: 'rgba(231,0,11,0.02)' }}>
+        <div style={{ padding: '20px', background: 'rgba(231,0,11,0.02)', display: 'flex', flexDirection: 'column', gap: 20 }}>
+
           {/* Clear history */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
             <div>
-              <p className="text-sm font-medium" style={{ color: '#d4d4d4' }}>{t('danger.clearHistory')}</p>
-              <p className="text-xs mt-0.5" style={{ color: '#525252' }}>{t('danger.clearHistoryDescription')}</p>
+              <p style={{ color: '#c8c8d8', fontWeight: 500, fontSize: 14, marginBottom: 2 }}>
+                {t('danger.clearHistory')}
+              </p>
+              <p style={{ color: '#252535', fontSize: 12, lineHeight: 1.4 }}>
+                {t('danger.clearHistoryDescription')}
+              </p>
             </div>
             {clearConfirm ? (
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-shrink-0">
                 <button
                   onClick={() => setClearConfirm(false)}
-                  className="px-3 py-1.5 text-xs rounded-lg cursor-pointer"
-                  style={{ background: '#1a1a1a', color: '#a1a1a1', border: '1px solid #262626' }}
+                  className="rounded-xl cursor-pointer"
+                  style={{ background: '#0c0c12', color: '#555568', border: '1px solid #141420', padding: '8px 14px', fontSize: 13 }}
                 >
                   Otkaži
                 </button>
                 <button
                   onClick={handleClearHistory}
                   disabled={dangerLoading}
-                  className="px-3 py-1.5 text-xs rounded-lg font-medium disabled:opacity-40 cursor-pointer"
-                  style={{ background: '#e7000b', color: '#ffffff' }}
+                  className="rounded-xl font-medium disabled:opacity-40 cursor-pointer"
+                  style={{ background: '#e7000b', color: '#fff', padding: '8px 14px', fontSize: 13 }}
                 >
                   {dangerLoading ? 'Brisanje...' : 'Potvrdi'}
                 </button>
@@ -236,37 +257,44 @@ export default function SettingsClient({
             ) : (
               <button
                 onClick={() => setClearConfirm(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg font-medium transition-colors cursor-pointer"
-                style={{ background: 'transparent', border: '1px solid #e7000b', color: '#e7000b' }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(231,0,11,0.1)'; }}
+                className="inline-flex items-center gap-1.5 rounded-xl font-medium cursor-pointer flex-shrink-0 self-start sm:self-auto"
+                style={{ background: 'transparent', border: '1px solid rgba(231,0,11,0.35)',
+                  color: '#e7000b', padding: '8px 14px', fontSize: 13 }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(231,0,11,0.08)'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
               >
-                <Trash2 size={12} strokeWidth={2} />
+                <Trash2 size={13} strokeWidth={2} />
                 {t('danger.clearHistory')}
               </button>
             )}
           </div>
 
+          <div style={{ height: 1, background: 'rgba(231,0,11,0.1)' }} />
+
           {/* Delete account */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
             <div>
-              <p className="text-sm font-medium" style={{ color: '#d4d4d4' }}>{t('danger.deleteAccount')}</p>
-              <p className="text-xs mt-0.5" style={{ color: '#525252' }}>{t('danger.deleteAccountDescription')}</p>
+              <p style={{ color: '#c8c8d8', fontWeight: 500, fontSize: 14, marginBottom: 2 }}>
+                {t('danger.deleteAccount')}
+              </p>
+              <p style={{ color: '#252535', fontSize: 12, lineHeight: 1.4 }}>
+                {t('danger.deleteAccountDescription')}
+              </p>
             </div>
             {deleteConfirm ? (
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-shrink-0">
                 <button
                   onClick={() => setDeleteConfirm(false)}
-                  className="px-3 py-1.5 text-xs rounded-lg cursor-pointer"
-                  style={{ background: '#1a1a1a', color: '#a1a1a1', border: '1px solid #262626' }}
+                  className="rounded-xl cursor-pointer"
+                  style={{ background: '#0c0c12', color: '#555568', border: '1px solid #141420', padding: '8px 14px', fontSize: 13 }}
                 >
                   Otkaži
                 </button>
                 <button
                   onClick={handleDeleteAccount}
                   disabled={dangerLoading}
-                  className="px-3 py-1.5 text-xs rounded-lg font-medium disabled:opacity-40 cursor-pointer"
-                  style={{ background: '#7f1d1d', color: '#f87171' }}
+                  className="rounded-xl font-semibold disabled:opacity-40 cursor-pointer"
+                  style={{ background: '#7f1d1d', color: '#fca5a5', padding: '8px 14px', fontSize: 13, letterSpacing: '0.02em' }}
                 >
                   {dangerLoading ? 'Brisanje...' : 'OBRIŠI NALOG'}
                 </button>
@@ -274,12 +302,13 @@ export default function SettingsClient({
             ) : (
               <button
                 onClick={() => setDeleteConfirm(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg font-medium transition-colors cursor-pointer"
-                style={{ background: 'transparent', border: '1px solid #e7000b', color: '#e7000b' }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(231,0,11,0.1)'; }}
+                className="inline-flex items-center gap-1.5 rounded-xl font-medium cursor-pointer flex-shrink-0 self-start sm:self-auto"
+                style={{ background: 'transparent', border: '1px solid rgba(231,0,11,0.35)',
+                  color: '#e7000b', padding: '8px 14px', fontSize: 13 }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(231,0,11,0.08)'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
               >
-                <Trash2 size={12} strokeWidth={2} />
+                <Trash2 size={13} strokeWidth={2} />
                 {t('danger.deleteAccount')}
               </button>
             )}

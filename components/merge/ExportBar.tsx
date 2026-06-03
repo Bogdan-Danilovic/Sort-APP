@@ -148,9 +148,9 @@ export default function ExportBar({ products, totals, companyName, onSave }: Exp
                 transition={SPRING}
                 className="absolute right-0 bottom-full mb-2 z-40 rounded-xl overflow-hidden py-1.5"
                 style={{
-                  background: '#111111',
-                  border: '1px solid #1f1f1f',
-                  boxShadow: '0 -8px 32px rgba(0,0,0,0.8)',
+                  background: '#0c0c12',
+                  border: '1px solid #141420',
+                  boxShadow: '0 -8px 32px rgba(0,0,0,0.9)',
                   minWidth: 200,
                 }}
               >

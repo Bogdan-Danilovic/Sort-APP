@@ -64,7 +64,7 @@ export default function RegisterForm({ locale }: RegisterFormProps) {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4" style={{ background: '#0a0a0a' }}>
+      <div className="min-h-screen flex items-center justify-center p-4" style={{ background: '#060609' }}>
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -91,7 +91,7 @@ export default function RegisterForm({ locale }: RegisterFormProps) {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: '#0a0a0a' }}>
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: '#060609' }}>
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -106,7 +106,7 @@ export default function RegisterForm({ locale }: RegisterFormProps) {
         </div>
 
         {/* Card */}
-        <div className="rounded-2xl p-8" style={{ background: '#111111', border: '1px solid #1f1f1f' }}>
+        <div className="rounded-2xl p-8" style={{ background: '#0c0c12', border: '1px solid #141420' }}>
           <h1 className="text-xl font-semibold mb-1" style={{ color: '#fafafa' }}>
             {t('register')}
           </h1>

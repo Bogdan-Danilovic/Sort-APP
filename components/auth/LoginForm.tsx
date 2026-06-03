@@ -72,7 +72,7 @@ export default function LoginForm({ locale }: LoginFormProps) {
   return (
     <div
       className="min-h-screen flex items-center justify-center p-4"
-      style={{ background: '#0a0a0a' }}
+      style={{ background: '#060609' }}
     >
       <motion.div
         initial={{ opacity: 0, y: 16 }}
@@ -90,7 +90,7 @@ export default function LoginForm({ locale }: LoginFormProps) {
         {/* Card */}
         <div
           className="rounded-2xl p-8"
-          style={{ background: '#111111', border: '1px solid #1f1f1f' }}
+          style={{ background: '#0c0c12', border: '1px solid #141420' }}
         >
           <h1 className="text-xl font-semibold mb-1" style={{ color: '#fafafa' }}>
             {t('login')}
