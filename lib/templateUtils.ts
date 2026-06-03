@@ -38,7 +38,7 @@ export function downloadCSVTemplate() {
 export async function downloadXLSXTemplate() {
   const XLSX = await import('xlsx');
 
-  const data = [HEADERS, ...EXAMPLE_ROWS];
+  const data: unknown[][] = [HEADERS, ...EXAMPLE_ROWS].map((row) => [...row]);
   const ws = XLSX.utils.aoa_to_sheet(data);
 
   ws['!cols'] = [{ wch: 32 }, { wch: 14 }, { wch: 14 }];
