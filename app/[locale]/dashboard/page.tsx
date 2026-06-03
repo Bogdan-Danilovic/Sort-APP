@@ -6,9 +6,7 @@ import { GitMerge, History, Clock, Package, ArrowRight, Plus } from 'lucide-reac
 import type { Metadata } from 'next';
 import type { MergeSessionRow } from '@/types';
 
-export const metadata: Metadata = {
-  title: 'Kontrolna tabla',
-};
+export const metadata: Metadata = { title: 'Kontrolna tabla' };
 
 interface DashboardPageProps {
   params: Promise<{ locale: string }>;
@@ -19,19 +17,15 @@ function timeAgo(dateStr: string): string {
   const minutes = Math.floor(diff / 60000);
   const hours = Math.floor(diff / 3600000);
   const days = Math.floor(diff / 86400000);
-
-  if (minutes < 60) return `pre ${minutes}min`;
-  if (hours < 24) return `pre ${hours}h`;
-  return `pre ${days}d`;
+  if (minutes < 60) return `${minutes}min`;
+  if (hours < 24) return `${hours}h`;
+  return `${days}d`;
 }
 
 function formatDate(dateStr: string): string {
   return new Intl.DateTimeFormat('sr-RS', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit',
   }).format(new Date(dateStr));
 }
 
@@ -46,13 +40,8 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
   const { locale } = await params;
   const supabase = await createServerComponentClient();
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (!session) {
-    redirect(`/${locale}/auth/login`);
-  }
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) redirect(`/${locale}/auth/login`);
 
   const { data: sessions } = await supabase
     .from('merge_sessions')
@@ -76,287 +65,225 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
   const userInitials = session.user.email
     ? session.user.email.slice(0, 2).toUpperCase()
     : 'MK';
-
   const userName = session.user.email?.split('@')[0] ?? '';
 
   return (
     <AppShell locale={locale} userEmail={session.user.email}>
-      <div style={{ maxWidth: 1100, margin: '0 auto' }} className="space-y-8">
+      <div style={{ maxWidth: 960, margin: '0 auto' }}>
 
-        {/* Welcome banner */}
+        {/* ── Welcome ──────────────────────────────────── */}
         <div
-          className="rounded-2xl overflow-hidden"
-          style={{ background: '#0d1a3a', border: '1px solid rgba(58,129,246,0.15)' }}
+          className="rounded-2xl mb-6"
+          style={{
+            background: 'linear-gradient(135deg, #080d1f 0%, #0a1228 60%, #060b1a 100%)',
+            border: '1px solid rgba(58,129,246,0.12)',
+            padding: '24px 20px',
+          }}
         >
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 p-6 sm:p-10">
-            {/* Left: avatar + greeting */}
-            <div className="flex items-center gap-5">
-              <div
-                className="flex-shrink-0 flex items-center justify-center rounded-2xl font-bold text-lg"
-                style={{
-                  width: 60,
-                  height: 60,
-                  background: 'linear-gradient(135deg, #1a4eda, #3a81f6)',
-                  color: '#ffffff',
-                  boxShadow: '0 8px 24px rgba(58,129,246,0.35)',
-                }}
-              >
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div style={{
+                width: 48, height: 48, borderRadius: 14, flexShrink: 0,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'linear-gradient(135deg, #1a4eda, #3a81f6)',
+                color: '#fff', fontWeight: 800, fontSize: 16,
+                boxShadow: '0 4px 20px rgba(58,129,246,0.3)',
+              }}>
                 {userInitials}
               </div>
               <div>
-                <p className="text-xs font-medium mb-1" style={{ color: '#4d7ab5' }}>
+                <p style={{ color: '#2a4a7a', fontSize: 11, fontWeight: 600, marginBottom: 2 }}>
                   {greeting()}
                 </p>
-                <h1
-                  className="text-2xl font-bold"
-                  style={{ color: '#fafafa', letterSpacing: '-0.02em' }}
-                >
+                <h1 style={{
+                  color: '#e8f0ff', fontSize: 20, fontWeight: 700,
+                  letterSpacing: '-0.02em',
+                  fontFamily: 'var(--font-jakarta,"Plus Jakarta Sans"),system-ui',
+                }}>
                   {userName}
                 </h1>
-                <p className="text-xs font-mono mt-1" style={{ color: '#2d5a8c' }}>
-                  {session.user.email}
-                </p>
               </div>
             </div>
 
-            {/* Right: CTA */}
-            <div className="flex flex-col gap-3 sm:items-end">
-              <Link
-                href={`/${locale}/merge`}
-                className="inline-flex items-center gap-2.5 px-7 py-4 rounded-xl text-sm font-semibold transition-all"
-                style={{
-                  background: 'linear-gradient(135deg, #2563ef, #3a81f6)',
-                  color: '#ffffff',
-                  boxShadow: '0 4px 24px rgba(58,129,246,0.45)',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                <Plus size={16} strokeWidth={2.5} />
-                Novo spajanje
-              </Link>
-              <Link
-                href={`/${locale}/history`}
-                className="inline-flex items-center gap-1.5 text-xs font-medium"
-                style={{ color: '#4d7ab5' }}
-              >
-                <History size={12} strokeWidth={2} />
-                Pogledaj istoriju
-                <ArrowRight size={11} strokeWidth={2.5} />
-              </Link>
-            </div>
+            <Link
+              href={`/${locale}/merge`}
+              className="inline-flex items-center gap-2 self-start sm:self-auto"
+              style={{
+                background: 'linear-gradient(135deg, #2563ef, #3a81f6)',
+                color: '#fff', padding: '12px 20px', borderRadius: 12,
+                fontWeight: 600, fontSize: 14, textDecoration: 'none',
+                boxShadow: '0 4px 20px rgba(58,129,246,0.4)',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              <Plus size={15} strokeWidth={2.5} />
+              Novo spajanje
+            </Link>
           </div>
         </div>
 
-        {/* Stats bento */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {/* ── Stats — 2 col mobile, 3 col desktop ──────── */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
           {[
             {
-              label: 'Ukupno spajanja',
+              label: 'Spajanja',
               value: String(totalSessions),
-              desc: totalSessions === 0 ? 'Još nema spajanja' : totalSessions === 1 ? '1 sačuvana sesija' : `${totalSessions} sačuvanih sesija`,
+              sub: 'ukupno sačuvano',
               icon: History,
               color: '#91c5ff',
-              bg: 'rgba(145,197,255,0.06)',
+              bg: 'rgba(145,197,255,0.07)',
             },
             {
-              label: 'Poslednja aktivnost',
+              label: 'Poslednje',
               value: lastSession ? timeAgo(lastSession.created_at) : '—',
-              desc: lastSession ? lastSession.session_name : 'Nema aktivnosti',
+              sub: lastSession ? lastSession.session_name : 'nema aktivnosti',
               icon: Clock,
               color: '#fcd34d',
-              bg: 'rgba(252,211,77,0.06)',
+              bg: 'rgba(252,211,77,0.07)',
               mono: true,
             },
             {
-              label: 'Ukupno proizvoda',
+              label: 'Proizvodi',
               value: String(totalProducts),
-              desc: 'Iz poslednih 5 sesija',
+              sub: 'iz poslednjih sesija',
               icon: Package,
               color: '#34d399',
-              bg: 'rgba(52,211,153,0.06)',
+              bg: 'rgba(52,211,153,0.07)',
+              wide: true,
             },
           ].map((stat) => {
             const Icon = stat.icon;
             return (
               <div
                 key={stat.label}
-                className="p-5 sm:p-7 rounded-2xl"
-                style={{
-                  background: '#0e0e0e',
-                  border: '1px solid #1a1a1a',
-                }}
+                className={`rounded-xl p-4 sm:p-6${stat.wide ? ' col-span-2 sm:col-span-1' : ''}`}
+                style={{ background: '#0c0c12', border: '1px solid #141420' }}
               >
-                <div className="flex items-start justify-between mb-5">
-                  <p
-                    className="text-xs font-semibold uppercase tracking-widest"
-                    style={{ color: '#333333' }}
-                  >
+                <div className="flex items-center justify-between mb-3">
+                  <p style={{ color: '#2a2a38', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                     {stat.label}
                   </p>
-                  <div
-                    className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{ background: stat.bg, border: '1px solid rgba(255,255,255,0.04)' }}
-                  >
-                    <Icon size={16} style={{ color: stat.color }} />
+                  <div style={{
+                    width: 30, height: 30, borderRadius: 8,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    background: stat.bg, flexShrink: 0,
+                  }}>
+                    <Icon size={14} style={{ color: stat.color }} />
                   </div>
                 </div>
                 <p
-                  className={`text-4xl font-bold mb-2 ${stat.mono ? 'font-mono' : ''}`}
-                  style={{ color: '#fafafa', letterSpacing: '-0.02em' }}
+                  className={stat.mono ? 'font-mono' : ''}
+                  style={{ color: '#e0e0f0', fontSize: 28, fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 6 }}
                 >
                   {stat.value}
                 </p>
-                <p className="text-xs" style={{ color: '#333333' }}>
-                  {stat.desc}
+                <p style={{ color: '#242430', fontSize: 11, lineHeight: 1.4 }} className="truncate">
+                  {stat.sub}
                 </p>
               </div>
             );
           })}
         </div>
 
-        {/* Recent sessions */}
+        {/* ── Recent sessions ──────────────────────────── */}
         <div>
-          <div className="flex items-center justify-between mb-5">
-            <div>
-              <h2
-                className="text-base font-semibold"
-                style={{ color: '#fafafa' }}
-              >
-                Poslednja spajanja
-              </h2>
-              <p className="text-xs mt-0.5" style={{ color: '#333333' }}>
-                Poslednih {Math.min(typedSessions.length, 5)} sačuvanih sesija
-              </p>
-            </div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 style={{ color: '#e0e0f0', fontSize: 14, fontWeight: 600 }}>
+              Poslednja spajanja
+            </h2>
             <Link
               href={`/${locale}/history`}
-              className="flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-lg transition-all"
-              style={{ color: '#91c5ff', background: 'rgba(145,197,255,0.06)', border: '1px solid rgba(145,197,255,0.1)' }}
+              className="inline-flex items-center gap-1"
+              style={{ color: '#3a81f6', fontSize: 12, fontWeight: 600, textDecoration: 'none' }}
             >
-              <History size={12} strokeWidth={2} />
-              Sve sesije
+              Sve
+              <ArrowRight size={11} strokeWidth={2.5} />
             </Link>
           </div>
 
           {typedSessions.length === 0 ? (
             <div
               className="rounded-2xl text-center"
-              style={{ background: '#0e0e0e', border: '1px solid #1a1a1a', padding: '64px 32px' }}
+              style={{ background: '#0c0c12', border: '1px solid #141420', padding: '48px 24px' }}
             >
-              <div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5"
-                style={{ background: '#111111', border: '1px solid #1a1a1a' }}
-              >
-                <Package size={24} style={{ color: '#2a2a2a' }} />
+              <div style={{
+                width: 48, height: 48, borderRadius: 14,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: '#101018', margin: '0 auto 16px',
+              }}>
+                <Package size={20} style={{ color: '#1e1e2c' }} />
               </div>
-              <p className="font-semibold mb-2" style={{ color: '#a1a1a1' }}>
-                Još uvek nema sačuvanih spajanja
+              <p style={{ color: '#a1a1a1', fontWeight: 600, marginBottom: 6, fontSize: 14 }}>
+                Nema sačuvanih spajanja
               </p>
-              <p className="text-sm mb-8 max-w-xs mx-auto leading-relaxed" style={{ color: '#2a2a2a' }}>
-                Počnite sa prvim spajanjem — učitajte fajlove i dobijte
-                kombinovani inventar za sekunde.
+              <p style={{ color: '#222230', fontSize: 13, marginBottom: 24, lineHeight: 1.5 }}>
+                Počnite sa prvim spajanjem inventara.
               </p>
               <Link
                 href={`/${locale}/merge`}
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-semibold"
+                className="inline-flex items-center gap-2"
                 style={{
                   background: 'linear-gradient(135deg, #2563ef, #3a81f6)',
-                  color: '#ffffff',
-                  boxShadow: '0 4px 20px rgba(58,129,246,0.35)',
+                  color: '#fff', padding: '12px 20px', borderRadius: 12,
+                  fontWeight: 600, fontSize: 14, textDecoration: 'none',
                 }}
               >
-                <GitMerge size={15} strokeWidth={2} />
+                <GitMerge size={14} strokeWidth={2} />
                 Kreirajte prvo spajanje
               </Link>
             </div>
           ) : (
             <div
               className="rounded-2xl overflow-hidden"
-              style={{ border: '1px solid #1a1a1a', background: '#0e0e0e' }}
+              style={{ border: '1px solid #141420', background: '#0c0c12' }}
             >
               <table className="w-full">
                 <thead>
-                  <tr style={{ borderBottom: '1px solid #141414' }}>
-                    <th
-                      className="text-left text-xs font-semibold uppercase tracking-wider"
-                      style={{ color: '#2a2a2a', padding: '14px 16px' }}
-                    >
-                      Naziv sesije
+                  <tr style={{ borderBottom: '1px solid #101018' }}>
+                    <th style={{ textAlign: 'left', padding: '13px 16px', color: '#222230', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+                      Naziv
                     </th>
-                    <th
-                      className="text-right text-xs font-semibold uppercase tracking-wider"
-                      style={{ color: '#2a2a2a', padding: '14px 16px' }}
-                    >
-                      Proizvodi
+                    <th style={{ textAlign: 'right', padding: '13px 16px', color: '#222230', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+                      Prod.
                     </th>
-                    <th
-                      className="text-right text-xs font-semibold uppercase tracking-wider hidden sm:table-cell"
-                      style={{ color: '#2a2a2a', padding: '14px 16px' }}
-                    >
-                      Fajlovi
-                    </th>
-                    <th
-                      className="text-left text-xs font-semibold uppercase tracking-wider hidden sm:table-cell"
-                      style={{ color: '#2a2a2a', padding: '14px 16px' }}
-                    >
+                    <th style={{ textAlign: 'left', padding: '13px 16px', color: '#222230', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em' }}
+                      className="hidden sm:table-cell">
                       Kada
                     </th>
-                    <th style={{ padding: '14px 16px' }} />
+                    <th style={{ padding: '13px 16px' }} />
                   </tr>
                 </thead>
                 <tbody>
                   {typedSessions.map((s, i) => {
-                    const productCount = Array.isArray(s.merged_result)
-                      ? s.merged_result.length
-                      : 0;
-                    const fileCount = Array.isArray(s.source_files)
-                      ? s.source_files.length
-                      : 0;
+                    const productCount = Array.isArray(s.merged_result) ? s.merged_result.length : 0;
 
                     return (
                       <tr
                         key={s.id}
-                        style={{
-                          borderBottom: i < typedSessions.length - 1 ? '1px solid #141414' : 'none',
-                        }}
+                        style={{ borderBottom: i < typedSessions.length - 1 ? '1px solid #0e0e16' : 'none' }}
                       >
                         <td style={{ padding: '14px 16px' }}>
-                          <span
-                            className="font-medium text-sm"
-                            style={{ color: '#e0e0e0' }}
-                          >
+                          <span style={{ color: '#c8c8d8', fontWeight: 500, fontSize: 14 }}>
                             {s.session_name}
                           </span>
                         </td>
-                        <td
-                          className="text-right font-mono text-sm"
-                          style={{ padding: '14px 16px', color: '#a1a1a1' }}
-                        >
+                        <td style={{ textAlign: 'right', padding: '14px 16px', fontFamily: 'var(--font-jetbrains,monospace)', color: '#555568', fontSize: 13 }}>
                           {productCount}
-                        </td>
-                        <td
-                          className="text-right font-mono text-sm hidden sm:table-cell"
-                          style={{ padding: '14px 16px', color: '#525252' }}
-                        >
-                          {fileCount}
                         </td>
                         <td className="hidden sm:table-cell" style={{ padding: '14px 16px' }}>
                           <span
-                            className="text-xs font-mono"
-                            style={{ color: '#3a3a3a' }}
+                            style={{ color: '#222230', fontSize: 12, fontFamily: 'var(--font-jetbrains,monospace)' }}
                             title={formatDate(s.created_at)}
                           >
-                            {timeAgo(s.created_at)}
+                            pre {timeAgo(s.created_at)}
                           </span>
                         </td>
-                        <td className="text-right" style={{ padding: '14px 16px' }}>
+                        <td style={{ textAlign: 'right', padding: '14px 16px' }}>
                           <Link
                             href={`/${locale}/history`}
-                            className="text-xs font-medium inline-flex items-center gap-1"
-                            style={{ color: '#91c5ff' }}
+                            style={{ color: '#3a81f6', fontSize: 12, fontWeight: 600, textDecoration: 'none' }}
                           >
-                            Otvori
-                            <ArrowRight size={11} strokeWidth={2.5} />
+                            Otvori →
                           </Link>
                         </td>
                       </tr>

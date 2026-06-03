@@ -81,7 +81,7 @@
   /* Layout */
   --sidebar-w:  240px;
   --topbar-h:   52px;
-  --dock-h:     60px;
+  --dock-h:     68px;
   --dock-gap:   0px;
 
   /* Springs */
@@ -487,21 +487,36 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
-  padding: 6px 12px;
-  min-width: 44px;
-  min-height: 44px;
-  color: #a1a1a1;
+  gap: 4px;
+  padding: 6px 16px;
+  min-width: 52px;
+  min-height: 52px;
+  color: #525252;
   font-size: 0.625rem;
-  font-weight: 500;
-  letter-spacing: 0.03em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   cursor: pointer;
   transition: color 150ms ease;
   text-decoration: none;
+  position: relative;
 }
 
-.dock-item:hover  { color: #e5e5e5; }
+.dock-item:hover { color: #a1a1a1; }
+
 .dock-item.active { color: #3a81f6; }
+
+.dock-item.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 2.5px;
+  border-radius: 0 0 4px 4px;
+  background: #3a81f6;
+  box-shadow: 0 0 10px rgba(58, 129, 246, 0.7);
+}
 
 /* ─── Animations ─────────────────────────────────────────── */
 @keyframes fadeIn      { from { opacity: 0; }                             to { opacity: 1; } }
