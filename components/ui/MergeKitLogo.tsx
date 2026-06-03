@@ -6,11 +6,14 @@ import { motion } from 'framer-motion';
 interface MergeKitLogoProps {
   locale: string;
   iconOnly?: boolean;
+  href?: string;
 }
 
-export default function MergeKitLogo({ locale, iconOnly = false }: MergeKitLogoProps) {
+export default function MergeKitLogo({ locale, iconOnly = false, href }: MergeKitLogoProps) {
+  const target = href ?? `/${locale}/dashboard`;
+
   return (
-    <Link href={`/${locale}/dashboard`} aria-label="MergeKit — Kontrolna tabla" style={{ textDecoration: 'none' }}>
+    <Link href={target} aria-label="MergeKit" style={{ textDecoration: 'none' }}>
       <motion.div
         className="flex items-center gap-2.5"
         whileHover={{ scale: 1.03, filter: 'drop-shadow(0 0 10px rgba(58,129,246,0.4))' }}
@@ -18,17 +21,9 @@ export default function MergeKitLogo({ locale, iconOnly = false }: MergeKitLogoP
         transition={{ duration: 0.15, ease: 'easeOut' }}
         style={{ cursor: 'pointer' }}
       >
-        {/* SVG: two streams merging into one — outline/stroke only */}
-        <svg
-          width="28"
-          height="28"
-          viewBox="0 0 28 28"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          style={{ flexShrink: 0 }}
-        >
-          <path d="M3 7 L14 14"  stroke="#3a81f6" strokeWidth="2"   strokeLinecap="round" />
-          <path d="M3 21 L14 14" stroke="#3a81f6" strokeWidth="2"   strokeLinecap="round" strokeOpacity="0.55" />
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+          <path d="M3 7 L14 14"   stroke="#3a81f6" strokeWidth="2"   strokeLinecap="round" />
+          <path d="M3 21 L14 14"  stroke="#3a81f6" strokeWidth="2"   strokeLinecap="round" strokeOpacity="0.55" />
           <path d="M14 14 L25 14" stroke="#3a81f6" strokeWidth="2.5" strokeLinecap="round" />
           <circle cx="3"  cy="7"  r="2"   fill="#1a4eda" />
           <circle cx="3"  cy="21" r="2"   fill="#1a4eda" fillOpacity="0.55" />
@@ -36,10 +31,7 @@ export default function MergeKitLogo({ locale, iconOnly = false }: MergeKitLogoP
         </svg>
 
         {!iconOnly && (
-          <span
-            className="font-mono font-bold text-sm tracking-tight whitespace-nowrap"
-            style={{ color: '#fafafa' }}
-          >
+          <span className="font-mono font-bold text-sm tracking-tight whitespace-nowrap" style={{ color: '#fafafa' }}>
             MergeKit
           </span>
         )}
