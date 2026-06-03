@@ -3,9 +3,10 @@
    Design tokens: Light Premium Theme, Classic Tables
    ============================================================ */
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+
+
 
 /* ─── CSS Variables ──────────────────────────────────────── */
 :root {
