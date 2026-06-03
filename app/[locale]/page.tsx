@@ -1,6 +1,4 @@
-import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { createServerComponentClient } from '@/lib/supabaseServer';
 import MergeKitLogo from '@/components/ui/MergeKitLogo';
 import { GitMerge, FileText, Layers, ArrowRight, Zap } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -15,14 +13,6 @@ interface HomePageProps {
 
 export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
-  const supabase = await createServerComponentClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (session) {
-    redirect(`/${locale}/dashboard`);
-  }
 
   return (
     <main
