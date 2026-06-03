@@ -72,9 +72,9 @@ export default function ExportButton({ products, totals, companyName }: ExportBu
         disabled={loading !== null || products.length === 0}
         className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-40"
         style={{
-          background: 'rgba(99, 102, 241, 0.15)',
-          color: '#818cf8',
-          border: '1px solid rgba(99, 102, 241, 0.2)',
+          background: 'rgba(245, 158, 11, 0.12)',
+          color: 'var(--accent)',
+          border: '1px solid rgba(245, 158, 11, 0.25)',
         }}
       >
         {loading ? (

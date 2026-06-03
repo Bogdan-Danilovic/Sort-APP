@@ -147,7 +147,7 @@ export default function Sidebar({ locale, userEmail }: SidebarProps) {
                     size={16}
                     strokeWidth={active ? 2.5 : 2}
                     style={{
-                      color: active ? '#818cf8' : 'var(--text-3)',
+                      color: active ? 'var(--accent)' : 'var(--text-3)',
                       flexShrink: 0,
                     }}
                   />
@@ -182,8 +182,8 @@ export default function Sidebar({ locale, userEmail }: SidebarProps) {
           <div
             className="w-7 h-7 rounded-md flex-shrink-0 flex items-center justify-center text-xs font-semibold"
             style={{
-              background: 'rgba(99, 102, 241, 0.2)',
-              color: '#818cf8',
+              background: 'rgba(245, 158, 11, 0.15)',
+              color: 'var(--accent)',
             }}
           >
             {initials}

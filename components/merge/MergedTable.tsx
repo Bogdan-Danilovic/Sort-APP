@@ -20,6 +20,8 @@ interface MergedTableProps {
 
 type SortableColumn = SortConfig['column'];
 
+const SPRING = { type: 'spring', stiffness: 300, damping: 20 } as const;
+
 const SORTABLE_COLS: Array<{
   key: SortableColumn;
   labelKey: string;
@@ -103,14 +105,14 @@ export default function MergedTable({
 
   return (
     <div className="flex flex-col gap-4">
-      {/* ─── MOBILE VIEW (Cards) ─── */}
-      <div className="md:hidden flex flex-col gap-3">
-        <div className="flex items-center justify-between px-1 mb-2">
-          <span className="text-xs font-semibold text-[var(--text-2)] uppercase tracking-wider">
+      {/* ─── MOBILE VIEW (Cards <768px) ─── */}
+      <div className="md:hidden flex flex-col gap-3 scroll-touch">
+        <div className="flex items-center justify-between px-1 mb-1">
+          <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-2)' }}>
             {grandTotals.totalProducts} stavki
           </span>
-          <span className="text-xs font-semibold text-[var(--text-1)]">
-            Total: {formatCurrency(grandTotals.totalValue, undefined)}
+          <span className="font-mono text-xs font-bold" style={{ color: 'var(--accent)' }}>
+            {formatCurrency(grandTotals.totalValue, undefined)}
           </span>
         </div>
 
@@ -118,39 +120,42 @@ export default function MergedTable({
           {products.map((product, idx) => (
             <motion.div
               key={product.normalizedKey}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.2, delay: idx * 0.02 }}
-              className="glass rounded-xl p-4 flex flex-col gap-3 relative overflow-hidden"
+              exit={{ opacity: 0, scale: 0.97 }}
+              transition={{ ...SPRING, delay: Math.min(idx * 0.015, 0.15) }}
+              className="merge-card"
             >
-              {/* Top row: Name & Value */}
-              <div className="flex justify-between items-start gap-2">
-                <div>
-                  <h3 className="font-semibold text-sm leading-tight text-[var(--text-1)]">
+              {/* Row 1: Name + Value */}
+              <div className="merge-card-row">
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-sm leading-tight truncate" style={{ color: 'var(--text-1)', fontFamily: 'var(--font-jakarta)' }}>
                     {product.displayName}
-                  </h3>
+                  </p>
                   {product.rawNames.length > 1 && (
-                    <p className="text-[10px] text-[var(--text-3)] mt-0.5" title={product.rawNames.join(', ')}>
+                    <p className="text-[10px] mt-0.5" style={{ color: 'var(--text-3)' }} title={product.rawNames.join(', ')}>
                       +{product.rawNames.length - 1} varijanti
                     </p>
                   )}
                 </div>
                 <div className="text-right flex-shrink-0">
-                  <div className="font-mono font-bold text-sm text-[var(--accent)]">
+                  <p className="mono font-bold text-sm" style={{ color: 'var(--accent)' }}>
                     {product.totalValue !== undefined
                       ? formatCurrency(product.totalValue, product.currency)
                       : '—'}
-                  </div>
-                  <div className="font-mono text-xs text-[var(--text-2)] mt-0.5">
+                  </p>
+                  <p className="mono text-xs mt-0.5" style={{ color: 'var(--text-2)' }}>
                     {product.totalQuantity} {product.unit || 'kom'}
-                  </div>
+                  </p>
                 </div>
               </div>
 
-              {/* Middle row: Price Editor */}
-              <div className="flex items-center justify-between bg-[var(--bg-2)] rounded-lg p-2 mt-1 border border-[var(--border)]">
-                <span className="text-xs text-[var(--text-2)] ml-1">Cena po kom:</span>
+              {/* Row 2: Price input */}
+              <div
+                className="merge-card-row rounded-lg px-3"
+                style={{ background: 'var(--bg-3)', border: '1px solid var(--border)', minHeight: 44 }}
+              >
+                <span className="text-xs" style={{ color: 'var(--text-3)' }}>Cena / kom</span>
                 <PriceEditor
                   productKey={product.normalizedKey}
                   value={product.manualPrice}
@@ -165,17 +170,15 @@ export default function MergedTable({
                 />
               </div>
 
-              {/* Bottom row: Sources & Description */}
-              <div className="flex flex-wrap items-center justify-between gap-2 mt-1">
-                <div className="flex flex-wrap gap-1">
-                  {product.sources.map((src) => (
-                    <span key={src} className="status-chip info text-[9px] px-1.5 py-0.5">
-                      {src.length > 12 ? src.slice(0, 10) + '…' : src}
-                    </span>
-                  ))}
-                </div>
+              {/* Row 3: Sources */}
+              <div className="flex flex-wrap gap-1">
+                {product.sources.map((src) => (
+                  <span key={src} className="status-chip info" style={{ fontSize: '0.6rem' }}>
+                    {src.length > 14 ? src.slice(0, 12) + '…' : src}
+                  </span>
+                ))}
                 {product.mergedDescription && (
-                  <span className="text-[10px] text-[var(--text-3)] italic max-w-[50%] truncate">
+                  <span className="text-[10px] italic truncate max-w-[50%]" style={{ color: 'var(--text-3)' }}>
                     {product.mergedDescription}
                   </span>
                 )}
@@ -185,9 +188,9 @@ export default function MergedTable({
         </AnimatePresence>
       </div>
 
-      {/* ─── DESKTOP VIEW (Table) ─── */}
-      <div className="hidden md:block rounded-xl overflow-hidden glass border-none shadow-lg">
-        <div className="overflow-auto" style={{ maxHeight: 'calc(100vh - 280px)' }}>
+      {/* ─── DESKTOP VIEW (Table ≥768px) ─── */}
+      <div className="hidden md:block rounded-xl overflow-hidden glass shadow-lg">
+        <div className="overflow-auto scroll-touch" style={{ maxHeight: 'calc(100vh - 280px)' }}>
           <table className="data-table w-full">
             <thead>
               <tr className="bg-[var(--bg-2)]/80 backdrop-blur-md">
@@ -230,7 +233,7 @@ export default function MergedTable({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.15, delay: idx * 0.01 }}
+                    transition={{ ...SPRING, delay: Math.min(idx * 0.01, 0.1) }}
                     className="hover:bg-white/5 transition-colors border-b border-[var(--border)]"
                   >
                     <td className="py-3 px-4">

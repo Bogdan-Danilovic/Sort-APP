@@ -10,20 +10,15 @@ interface AppShellProps {
 export default function AppShell({ children, locale, userEmail }: AppShellProps) {
   return (
     <div className="app-shell">
-      {/* Desktop Sidebar */}
       <Sidebar locale={locale} userEmail={userEmail} />
 
-      {/* Main content */}
       <main className="app-main">
-        <div
-          className="min-h-full p-6 pb-28 md:pb-6"
-          style={{ maxWidth: '100%' }}
-        >
+        {/* pb uzima u obzir dock visinu (72px) + gap (16px) + buffer na mobilnom */}
+        <div className="min-h-full p-4 md:p-6" style={{ paddingBottom: 'calc(var(--dock-h) + var(--dock-gap) + 24px)' }}>
           {children}
         </div>
       </main>
 
-      {/* Mobile bottom nav */}
       <MobileNav locale={locale} />
     </div>
   );

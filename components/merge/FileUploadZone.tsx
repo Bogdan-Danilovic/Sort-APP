@@ -1,8 +1,8 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Upload, FileText, FileSpreadsheet } from 'lucide-react';
+import { Upload, FileText, FileSpreadsheet, ClipboardPaste } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface FileUploadZoneProps {
@@ -19,20 +19,22 @@ const ACCEPTED_TYPES = [
 
 const ACCEPTED_EXTENSIONS = ['.csv', '.txt', '.xlsx', '.xls'];
 
-function getFileIcon(filename: string) {
-  const ext = filename.split('.').pop()?.toLowerCase();
-  if (ext === 'csv' || ext === 'xlsx' || ext === 'xls')
-    return FileSpreadsheet;
-  return FileText;
+const SPRING = { type: 'spring', stiffness: 300, damping: 20 } as const;
+
+function filterFiles(raw: File[]) {
+  return raw.filter((f) => {
+    const ext = '.' + (f.name.split('.').pop()?.toLowerCase() ?? '');
+    return ACCEPTED_TYPES.includes(f.type) || ACCEPTED_EXTENSIONS.includes(ext);
+  });
 }
 
-export default function FileUploadZone({
-  onFilesAdded,
-  isLoading = false,
-}: FileUploadZoneProps) {
+export default function FileUploadZone({ onFilesAdded, isLoading = false }: FileUploadZoneProps) {
   const t = useTranslations('merge.upload');
   const [isDragOver, setIsDragOver] = useState(false);
+  const [isPasteHint, setIsPasteHint] = useState(false);
+  const zoneRef = useRef<HTMLDivElement>(null);
 
+  /* ── drag handlers ─────────────────────────────────────── */
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -42,11 +44,11 @@ export default function FileUploadZone({
   const handleDragLeave = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    // Provjeri da li smo zaista izašli iz zone
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    const x = e.clientX;
-    const y = e.clientY;
-    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
+    if (
+      e.clientX < rect.left || e.clientX > rect.right ||
+      e.clientY < rect.top  || e.clientY > rect.bottom
+    ) {
       setIsDragOver(false);
     }
   }, []);
@@ -56,52 +58,78 @@ export default function FileUploadZone({
       e.preventDefault();
       e.stopPropagation();
       setIsDragOver(false);
-
-      const files = Array.from(e.dataTransfer.files).filter((f) => {
-        const ext = '.' + (f.name.split('.').pop()?.toLowerCase() ?? '');
-        return (
-          ACCEPTED_TYPES.includes(f.type) ||
-          ACCEPTED_EXTENSIONS.includes(ext)
-        );
-      });
-
-      if (files.length > 0) {
-        onFilesAdded(files);
-      }
+      const files = filterFiles(Array.from(e.dataTransfer.files));
+      if (files.length > 0) onFilesAdded(files);
     },
     [onFilesAdded]
   );
 
+  /* ── file input ────────────────────────────────────────── */
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const files = Array.from(e.target.files ?? []);
-      if (files.length > 0) {
-        onFilesAdded(files);
-      }
-      // Reset input
+      if (files.length > 0) onFilesAdded(files);
       e.target.value = '';
     },
     [onFilesAdded]
   );
 
+  /* ── paste from clipboard ──────────────────────────────── */
+  useEffect(() => {
+    const onPaste = (e: ClipboardEvent) => {
+      if (isLoading) return;
+
+      // Files pasted (e.g. from file manager)
+      const items = e.clipboardData?.items ?? [];
+      const pastedFiles: File[] = [];
+      for (const item of items) {
+        if (item.kind === 'file') {
+          const f = item.getAsFile();
+          if (f) pastedFiles.push(f);
+        }
+      }
+      if (pastedFiles.length > 0) {
+        const filtered = filterFiles(pastedFiles);
+        if (filtered.length > 0) { onFilesAdded(filtered); return; }
+      }
+
+      // Text pasted — wrap as .txt File
+      const text = e.clipboardData?.getData('text');
+      if (text && text.trim().length > 0) {
+        const blob = new Blob([text], { type: 'text/plain' });
+        const file = new File([blob], 'paste.txt', { type: 'text/plain' });
+        onFilesAdded([file]);
+        setIsPasteHint(true);
+        setTimeout(() => setIsPasteHint(false), 2000);
+      }
+    };
+
+    window.addEventListener('paste', onPaste);
+    return () => window.removeEventListener('paste', onPaste);
+  }, [isLoading, onFilesAdded]);
+
+  const openPicker = () => {
+    if (!isLoading) document.getElementById('mk-file-input')?.click();
+  };
+
   return (
-    <div
-      className={`upload-zone ${isDragOver ? 'drag-over' : ''}`}
+    <motion.div
+      ref={zoneRef}
+      className="upload-zone relative overflow-hidden"
+      animate={{ scale: isDragOver ? 1.015 : 1 }}
+      transition={SPRING}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      onClick={() => document.getElementById('file-input')?.click()}
+      onClick={openPicker}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          document.getElementById('file-input')?.click();
-        }
-      }}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') openPicker(); }}
       aria-label={t('dropzone')}
+      style={{ cursor: isLoading ? 'not-allowed' : 'pointer' }}
     >
       <input
-        id="file-input"
+        id="mk-file-input"
         type="file"
         multiple
         accept={ACCEPTED_EXTENSIONS.join(',')}
@@ -110,25 +138,74 @@ export default function FileUploadZone({
         disabled={isLoading}
       />
 
+      {/* Animated SVG marching-ants border on drag-over */}
+      <AnimatePresence>
+        {isDragOver && (
+          <motion.svg
+            key="marching"
+            className="absolute inset-0 w-full h-full pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{ borderRadius: 12 }}
+          >
+            <motion.rect
+              x="1" y="1"
+              width="calc(100% - 2px)" height="calc(100% - 2px)"
+              rx="11" ry="11"
+              fill="none"
+              stroke="var(--accent)"
+              strokeWidth="1.5"
+              strokeDasharray="8 6"
+              animate={{ strokeDashoffset: [0, -112] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+            />
+          </motion.svg>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence mode="wait">
         {isDragOver ? (
           <motion.div
             key="drag"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={SPRING}
             className="flex flex-col items-center gap-4"
           >
             <motion.div
-              animate={{ y: [0, -6, 0] }}
-              transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
-              className="w-14 h-14 rounded-2xl flex items-center justify-center bg-indigo-500/20 border border-indigo-500/30 shadow-[0_0_20px_rgba(99,102,241,0.3)]"
+              animate={{ y: [0, -7, 0] }}
+              transition={{ repeat: Infinity, duration: 1.1, ease: 'easeInOut' }}
+              className="w-14 h-14 rounded-2xl flex items-center justify-center"
+              style={{
+                background: 'rgba(245,158,11,0.15)',
+                border: '1px solid rgba(245,158,11,0.3)',
+                boxShadow: '0 0 20px rgba(245,158,11,0.25)',
+              }}
             >
-              <Upload size={24} className="text-indigo-400" />
+              <Upload size={24} style={{ color: 'var(--accent)' }} />
             </motion.div>
-            <p className="font-semibold text-indigo-400 tracking-wide">
+            <p className="font-semibold tracking-wide" style={{ color: 'var(--accent)' }}>
               {t('dropzoneActive')}
             </p>
+          </motion.div>
+        ) : isPasteHint ? (
+          <motion.div
+            key="pasted"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={SPRING}
+            className="flex flex-col items-center gap-3"
+          >
+            <div
+              className="w-12 h-12 rounded-2xl flex items-center justify-center"
+              style={{ background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)' }}
+            >
+              <ClipboardPaste size={20} style={{ color: '#10b981' }} />
+            </div>
+            <p className="font-semibold text-sm" style={{ color: '#10b981' }}>Zalijepljeno!</p>
           </motion.div>
         ) : (
           <motion.div
@@ -136,32 +213,72 @@ export default function FileUploadZone({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
             className="flex flex-col items-center gap-3"
           >
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-[var(--bg-2)] border border-[var(--border)] shadow-sm group-hover:scale-105 transition-transform duration-300">
-              <Upload size={20} className="text-[var(--text-3)] group-hover:text-indigo-400 transition-colors" />
+            {/* Icon */}
+            <div
+              className="w-12 h-12 rounded-2xl flex items-center justify-center transition-colors duration-200"
+              style={{ background: 'var(--bg-2)', border: '1px solid var(--border)' }}
+            >
+              <Upload size={20} style={{ color: 'var(--text-3)' }} />
             </div>
-            <div className="flex flex-col items-center gap-1">
-              <p className="font-semibold text-[var(--text-1)]">
+
+            {/* Labels */}
+            <div className="flex flex-col items-center gap-1.5">
+              <p className="font-semibold text-sm" style={{ color: 'var(--text-1)', fontFamily: 'var(--font-jakarta)' }}>
                 {t('dropzone')}
               </p>
-              <p className="text-xs text-[var(--text-3)]">
+              <p className="text-xs" style={{ color: 'var(--text-3)' }}>
                 {t('dropzoneHint')}
               </p>
             </div>
+
+            {/* Format chips */}
+            <div className="flex items-center gap-2 mt-1">
+              {['.csv', '.txt', '.xlsx'].map((ext) => (
+                <span
+                  key={ext}
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-mono font-medium"
+                  style={{ background: 'var(--bg-2)', border: '1px solid var(--border)', color: 'var(--text-3)' }}
+                >
+                  {ext === '.csv' || ext === '.xlsx'
+                    ? <FileSpreadsheet size={10} />
+                    : <FileText size={10} />
+                  }
+                  {ext}
+                </span>
+              ))}
+            </div>
+
+            {/* Browse button */}
             <button
               type="button"
-              className="text-xs font-semibold px-4 py-2 mt-1 rounded-lg transition-all duration-300 bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 hover:shadow-glow-sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                document.getElementById('file-input')?.click();
+              className="text-xs font-semibold px-4 py-2 mt-1 rounded-lg transition-all duration-200 cursor-pointer"
+              style={{
+                background: 'rgba(245,158,11,0.1)',
+                color: 'var(--accent)',
+                border: '1px solid rgba(245,158,11,0.2)',
               }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(245,158,11,0.18)';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(245,158,11,0.1)';
+              }}
+              onClick={(e) => { e.stopPropagation(); openPicker(); }}
             >
               {t('browse')}
             </button>
+
+            {/* Paste hint */}
+            <p className="text-[11px] flex items-center gap-1" style={{ color: 'var(--text-3)' }}>
+              <ClipboardPaste size={11} />
+              Ctrl+V za lijepljenje teksta
+            </p>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }

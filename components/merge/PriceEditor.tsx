@@ -82,6 +82,7 @@ export default function PriceEditor({
       <input
         ref={setRef}
         type="number"
+        inputMode="decimal"
         value={localValue}
         onChange={(e) => setLocalValue(e.target.value)}
         onKeyDown={handleKeyDown}
@@ -90,11 +91,7 @@ export default function PriceEditor({
         placeholder={suggestedValue?.toString() ?? '—'}
         className="price-input"
         style={{
-          color: isManual
-            ? 'var(--text-1)'
-            : isSuggested
-            ? 'var(--text-3)'
-            : 'var(--text-3)',
+          color: isManual ? 'var(--text-1)' : 'var(--text-3)',
           fontStyle: isSuggested && !isManual ? 'italic' : 'normal',
         }}
         min={0}

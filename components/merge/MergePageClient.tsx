@@ -12,7 +12,7 @@ import PasteTextArea from '@/components/merge/PasteTextArea';
 import StepIndicator from '@/components/merge/StepIndicator';
 import ParsedPreview from '@/components/merge/ParsedPreview';
 import MergedTable from '@/components/merge/MergedTable';
-import ExportButton from '@/components/merge/ExportButton';
+import ExportBar from '@/components/merge/ExportBar';
 import SaveSessionModal from '@/components/merge/SaveSessionModal';
 
 import { useMergeSession } from '@/lib/hooks/useMergeSession';
@@ -327,28 +327,6 @@ export default function MergePageClient({
               )}
 
               <div className="flex-1" />
-
-              {/* Export */}
-              <ExportButton
-                products={session.filteredProducts}
-                totals={session.grandTotals}
-                companyName={companyName}
-              />
-
-              {/* Save */}
-              <button
-                type="button"
-                onClick={() => setSaveModalOpen(true)}
-                className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                style={{
-                  background: 'rgba(16, 185, 129, 0.12)',
-                  color: '#6ee7b7',
-                  border: '1px solid rgba(16, 185, 129, 0.2)',
-                }}
-              >
-                <Save size={14} strokeWidth={2} />
-                {t('merge.result.saveSession')}
-              </button>
             </div>
 
             {/* Table */}
@@ -374,6 +352,14 @@ export default function MergePageClient({
                 {t('merge.result.startOver')}
               </button>
             </div>
+
+            {/* Sticky export bar */}
+            <ExportBar
+              products={session.filteredProducts}
+              totals={session.grandTotals}
+              companyName={companyName}
+              onSave={() => setSaveModalOpen(true)}
+            />
 
             {/* Confirm reset */}
             {confirmReset && (
