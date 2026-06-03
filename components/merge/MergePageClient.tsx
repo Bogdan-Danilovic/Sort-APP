@@ -16,6 +16,7 @@ import SaveSessionModal from '@/components/merge/SaveSessionModal';
 import UnknownFlavorModal from '@/components/merge/UnknownFlavorModal';
 
 import { useMergeSession } from '@/lib/hooks/useMergeSession';
+import { useFlavorInit } from '@/lib/hooks/useFlavorInit';
 import { createClient } from '@/lib/supabase';
 import {
   getFlavorCanonical,
@@ -51,6 +52,21 @@ export default function MergePageClient({ locale, userId, companyName }: MergePa
   const step3DetectedRef                            = useRef(false);
 
   const session = useMergeSession();
+
+  // Učitaj Supabase aliases pri startu i dopuni flavorMap
+  const { isReady: flavorsReady } = useFlavorInit();
+
+  // Kada Supabase aliases stignu (async), re-merge i ponovi detekciju
+  // Ovo rešava slučaj kad korisnik stigne do step 3 pre nego fetch završi
+  useEffect(() => {
+    if (!flavorsReady) return;
+    if (session.step === 3) {
+      // Resetuj flag da bi detekcija mogla ponovo da se pokrene
+      step3DetectedRef.current = false;
+      session.reMerge();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [flavorsReady]);
 
   // ── Session storage helpers ──────────────────────────────
 
@@ -89,6 +105,7 @@ export default function MergePageClient({ locale, userId, companyName }: MergePa
   }, []);
 
   // Detect unknown flavor names when step 3 is entered
+  // Pokreće se: (a) pri prvom ulasku u step 3, (b) kad Supabase aliases stignu
   useEffect(() => {
     if (session.step === 3 && !step3DetectedRef.current) {
       step3DetectedRef.current = true;
@@ -115,17 +132,29 @@ export default function MergePageClient({ locale, userId, companyName }: MergePa
       setUnknownQueue([]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session.step]);
+  }, [session.step, session.mergedProducts]);
 
   // ── Unknown flavor handlers ──────────────────────────────
 
   const handleFlavorLink = (name: string, canonical: string) => {
     const norm = normalizeProductName(name);
+
+    // 1. Odmah ažuriraj memorijsku mapu i re-merge
     addTemporaryAlias(name, canonical);
     const d = loadDecisions();
     saveDecisions({ ...d, linked: { ...d.linked, [norm]: canonical } });
     session.reMerge();
     setUnknownQueue((prev) => prev.filter((n) => n !== name));
+
+    // 2. Fire-and-forget: sačuvaj u Supabase (perzistencija)
+    fetch('/api/flavors', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ canonical, alias: name }),
+    }).catch((err) => {
+      // Greška ne blokira UI — alias ostaje u session storage
+      console.warn('[handleFlavorLink] Nije moguće sačuvati u Supabase:', err);
+    });
   };
 
   const handleFlavorDismiss = (name: string) => {

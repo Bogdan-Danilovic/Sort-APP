@@ -96,6 +96,30 @@ export interface Database {
           }
         ];
       };
+      flavor_aliases: {
+        Row: {
+          id: string;
+          canonical: string;
+          aliases: string[];
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          canonical: string;
+          aliases?: string[];
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          canonical?: string;
+          aliases?: string[];
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<never, never>;
     Functions: Record<never, never>;
