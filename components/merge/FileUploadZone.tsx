@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Upload, FileText, FileSpreadsheet, ClipboardPaste } from 'lucide-react';
+import { Upload, FileText, FileSpreadsheet, ClipboardPaste, Download } from 'lucide-react';
+import { downloadCSVTemplate, downloadXLSXTemplate } from '@/lib/templateUtils';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface FileUploadZoneProps {
@@ -276,6 +277,31 @@ export default function FileUploadZone({ onFilesAdded, isLoading = false }: File
               <ClipboardPaste size={11} />
               Ctrl+V za lijepljenje teksta
             </p>
+
+            {/* Template download */}
+            <div className="flex items-center gap-1.5 text-[11px]" style={{ color: '#525252' }}>
+              <Download size={10} />
+              <span>Predložak:</span>
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); downloadCSVTemplate(); }}
+                className="underline underline-offset-2 transition-colors cursor-pointer"
+                onMouseEnter={(e) => { e.currentTarget.style.color = '#91c5ff'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = '#525252'; }}
+              >
+                CSV
+              </button>
+              <span>·</span>
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); downloadXLSXTemplate(); }}
+                className="underline underline-offset-2 transition-colors cursor-pointer"
+                onMouseEnter={(e) => { e.currentTarget.style.color = '#91c5ff'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = '#525252'; }}
+              >
+                Excel
+              </button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
