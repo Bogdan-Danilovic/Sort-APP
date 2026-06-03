@@ -68,6 +68,9 @@ interface UseMergeSessionReturn {
   canUndo: boolean;
   undoStackSize: number;
 
+  // ── Re-merge with updated flavor map ────────────────────
+  reMerge: () => void;
+
   // ── Reset ───────────────────────────────────────────────
   reset: () => void;
 
@@ -397,6 +400,18 @@ export function useMergeSession(): UseMergeSessionReturn {
     return products;
   })();
 
+  // ── Re-merge ──────────────────────────────────────────
+
+  const reMerge = useCallback(() => {
+    if (parsedFiles.length === 0) return;
+    const allRows = parsedFiles.map((pf) => pf.rows);
+    const merged = mergeProducts(allRows);
+    const sources = [...new Set(parsedFiles.map((pf) => pf.filename))];
+    const totals = calculateGrandTotals(merged, sources);
+    setMergedProducts(merged);
+    setGrandTotals(totals);
+  }, [parsedFiles]);
+
   // ── Reset ─────────────────────────────────────────────
 
   const reset = useCallback(() => {
@@ -452,6 +467,7 @@ export function useMergeSession(): UseMergeSessionReturn {
     applyPriceToAll,
     canUndo,
     undoStackSize,
+    reMerge,
     reset,
     loadFromSession,
   };

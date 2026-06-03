@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -13,9 +13,16 @@ import ParsedPreview from '@/components/merge/ParsedPreview';
 import MergedTable from '@/components/merge/MergedTable';
 import ExportBar from '@/components/merge/ExportBar';
 import SaveSessionModal from '@/components/merge/SaveSessionModal';
+import UnknownFlavorModal from '@/components/merge/UnknownFlavorModal';
 
 import { useMergeSession } from '@/lib/hooks/useMergeSession';
 import { createClient } from '@/lib/supabase';
+import {
+  getFlavorCanonical,
+  addTemporaryAlias,
+  getLoadedFlavorEntries,
+  normalizeProductName,
+} from '@/lib/normalizer';
 
 import { ArrowRight, ArrowLeft, RotateCcw, Undo2, Search, X } from 'lucide-react';
 import MergeKitLogo from '@/components/ui/MergeKitLogo';
@@ -37,11 +44,98 @@ export default function MergePageClient({ locale, userId, companyName }: MergePa
   const t = useTranslations();
   const supabase = createClient();
 
-  const [saveModalOpen, setSaveModalOpen] = useState(false);
-  const [confirmReset, setConfirmReset]   = useState(false);
-  const [bulkPrice, setBulkPrice]         = useState('');
+  const [saveModalOpen, setSaveModalOpen]           = useState(false);
+  const [confirmReset, setConfirmReset]             = useState(false);
+  const [bulkPrice, setBulkPrice]                   = useState('');
+  const [unknownQueue, setUnknownQueue]             = useState<string[]>([]);
+  const step3DetectedRef                            = useRef(false);
 
   const session = useMergeSession();
+
+  // ── Session storage helpers ──────────────────────────────
+
+  const SS_KEY = 'mergekit-flavor-decisions';
+
+  type FlavorDecisions = {
+    dismissed: string[];
+    linked: Record<string, string>;
+  };
+
+  function loadDecisions(): FlavorDecisions {
+    try {
+      const raw = sessionStorage.getItem(SS_KEY);
+      if (!raw) return { dismissed: [], linked: {} };
+      return JSON.parse(raw) as FlavorDecisions;
+    } catch {
+      return { dismissed: [], linked: {} };
+    }
+  }
+
+  function saveDecisions(d: FlavorDecisions): void {
+    try {
+      sessionStorage.setItem(SS_KEY, JSON.stringify(d));
+    } catch {
+      // sessionStorage may be unavailable in some contexts
+    }
+  }
+
+  // Apply any previously linked aliases from this session on mount
+  useEffect(() => {
+    const { linked } = loadDecisions();
+    for (const [raw, canonical] of Object.entries(linked)) {
+      addTemporaryAlias(raw, canonical);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Detect unknown flavor names when step 3 is entered
+  useEffect(() => {
+    if (session.step === 3 && !step3DetectedRef.current) {
+      step3DetectedRef.current = true;
+
+      const { dismissed, linked } = loadDecisions();
+      const decidedKeys = new Set([
+        ...dismissed,
+        ...Object.keys(linked),
+      ]);
+
+      const unknowns = session.mergedProducts
+        .map((p) => p.displayName)
+        .filter((name) => {
+          if (getFlavorCanonical(name) !== null) return false;
+          const norm = normalizeProductName(name);
+          return !decidedKeys.has(norm);
+        });
+
+      if (unknowns.length > 0) setUnknownQueue(unknowns);
+    }
+
+    if (session.step !== 3) {
+      step3DetectedRef.current = false;
+      setUnknownQueue([]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session.step]);
+
+  // ── Unknown flavor handlers ──────────────────────────────
+
+  const handleFlavorLink = (name: string, canonical: string) => {
+    const norm = normalizeProductName(name);
+    addTemporaryAlias(name, canonical);
+    const d = loadDecisions();
+    saveDecisions({ ...d, linked: { ...d.linked, [norm]: canonical } });
+    session.reMerge();
+    setUnknownQueue((prev) => prev.filter((n) => n !== name));
+  };
+
+  const handleFlavorDismiss = (name: string) => {
+    const norm = normalizeProductName(name);
+    const d = loadDecisions();
+    saveDecisions({ ...d, dismissed: [...d.dismissed, norm] });
+    setUnknownQueue((prev) => prev.filter((n) => n !== name));
+  };
+
+  const canonicals = getLoadedFlavorEntries().map((e) => e.canonical);
 
   const hasInput =
     session.uploadedFiles.some((f) => !f.isLoading && !f.error) ||
@@ -366,6 +460,18 @@ export default function MergePageClient({ locale, userId, companyName }: MergePa
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Unknown flavor modal */}
+      {unknownQueue.length > 0 && unknownQueue[0] && (
+        <UnknownFlavorModal
+          name={unknownQueue[0]}
+          canonicals={canonicals}
+          remainingCount={unknownQueue.length}
+          onLink={handleFlavorLink}
+          onDismiss={handleFlavorDismiss}
+          onClose={() => setUnknownQueue([])}
+        />
+      )}
 
       {/* Save modal */}
       <SaveSessionModal

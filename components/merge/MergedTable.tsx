@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { MergedProduct, GrandTotals, SortConfig, FilterConfig } from '@/types';
 import { formatQuantityBreakdown, formatPrices, formatCurrency } from '@/lib/merger';
+import { buildFlavorDisplayName } from '@/lib/normalizer';
 import PriceEditor from '@/components/merge/PriceEditor';
 import { ArrowUp, ArrowDown, ChevronsUpDown } from 'lucide-react';
 
@@ -184,15 +185,18 @@ export default function MergedTable({
                       className="font-medium text-sm"
                       style={{ color: 'var(--text-1)' }}
                     >
-                      {product.displayName}
+                      {buildFlavorDisplayName(product.displayName)}
                     </span>
                     {product.rawNames.length > 1 && (
                       <div
                         className="text-2xs mt-0.5"
                         style={{ color: 'var(--text-3)' }}
-                        title={product.rawNames.join(', ')}
+                        title={product.rawNames.join(' / ')}
                       >
-                        +{product.rawNames.length - 1} varijanti
+                        {product.rawNames.slice(0, 2).join(' / ')}
+                        {product.rawNames.length > 2
+                          ? ` +${product.rawNames.length - 2}`
+                          : ''}
                       </div>
                     )}
                   </td>

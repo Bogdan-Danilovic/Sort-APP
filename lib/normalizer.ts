@@ -4,6 +4,8 @@
 // šećer = secer = SECER = Secer = шећер
 // ============================================================
 
+import flavorData from './flavorAliases.json';
+
 /** Mapa srpskih latiničnih dijakritika → ASCII */
 const LATIN_DIACRITIC_MAP: Record<string, string> = {
   // Mala slova
@@ -201,3 +203,101 @@ export function runNormalizerTests(): boolean {
     return result;
   });
 }
+
+// ─── Flavor alias matching ────────────────────────────────────
+
+export type FlavorEntry = {
+  canonical: string;
+  aliases: string[];
+};
+
+let _flavorMap: Map<string, string> | null = null;
+let _flavorEntries: FlavorEntry[] = [];
+
+/**
+ * Učitava JSON listu ukusa u memorijsku mapu.
+ * Poziva se jednom pri startu (auto-poziv na dnu ovog fajla).
+ */
+export function initFlavorMap(entries: FlavorEntry[]): void {
+  _flavorEntries = entries;
+  _flavorMap = new Map<string, string>();
+  for (const entry of entries) {
+    _flavorMap.set(normalizeProductName(entry.canonical), entry.canonical);
+    for (const alias of entry.aliases) {
+      _flavorMap.set(normalizeProductName(alias), entry.canonical);
+    }
+  }
+}
+
+/**
+ * Dodaje privremeni alias u memorijsku mapu (ne menja JSON).
+ * Koristi se za user-defined matcheve u toku sesije.
+ */
+export function addTemporaryAlias(rawName: string, canonicalName: string): void {
+  if (_flavorMap === null) {
+    _flavorMap = new Map<string, string>();
+  }
+  _flavorMap.set(normalizeProductName(rawName), canonicalName);
+}
+
+/**
+ * Vraća canonical naziv ukusa za dati naziv, ili null ako nije prepoznat.
+ */
+export function getFlavorCanonical(name: string): string | null {
+  if (_flavorMap === null) return null;
+  return _flavorMap.get(normalizeProductName(name)) ?? null;
+}
+
+/**
+ * Vraća true ako su dva naziva isti ukus (direktno ili kroz aliases).
+ */
+export function isSameFlavor(a: string, b: string): boolean {
+  const ca = getFlavorCanonical(a);
+  const cb = getFlavorCanonical(b);
+  if (ca !== null && cb !== null) return ca === cb;
+  return normalizeProductName(a) === normalizeProductName(b);
+}
+
+/**
+ * Zamena za createMergeKey — koristi canonical ako je ukus prepoznat.
+ * Ovo je ključ koji merger.ts koristi za grupisanje istih ukusa.
+ */
+export function createFlavorMergeKey(name: string): string {
+  const canonical = getFlavorCanonical(name);
+  if (canonical !== null) return normalizeProductName(canonical);
+  return createMergeKey(name);
+}
+
+/**
+ * Vraća sve poznate sinonime za dati naziv ukusa.
+ */
+export function getFlavorAliases(name: string): string[] {
+  if (_flavorMap === null) return [name];
+  const canonical = getFlavorCanonical(name);
+  if (!canonical) return [name];
+  const entry = _flavorEntries.find(
+    (e) => normalizeProductName(e.canonical) === normalizeProductName(canonical)
+  );
+  if (!entry) return [canonical];
+  return [entry.canonical, ...entry.aliases];
+}
+
+/**
+ * Vraća canonical naziv za prikaz u tabeli.
+ * Ako ukus nije prepoznat, vraća formatovano originalno ime.
+ */
+export function buildFlavorDisplayName(name: string): string {
+  const canonical = getFlavorCanonical(name);
+  if (canonical !== null) return canonical;
+  return formatDisplayName(name);
+}
+
+/**
+ * Vraća sve učitane flavor entries (za dropdown u modalima).
+ */
+export function getLoadedFlavorEntries(): FlavorEntry[] {
+  return _flavorEntries;
+}
+
+// Auto-inicijalizacija iz bundlovanog JSON-a
+initFlavorMap(flavorData as FlavorEntry[]);

@@ -1,0 +1,133 @@
+[
+  {
+    "canonical": "Raspberry Coke",
+    "aliases": [
+      "raspberry coke", "malina kola", "raspberry cola", "malina cola",
+      "raspberry", "malina", "frambuaza"
+    ]
+  },
+  {
+    "canonical": "Watermelon",
+    "aliases": ["watermelon", "lubenica", "watermelon ice", "ledena lubenica"]
+  },
+  {
+    "canonical": "Strawberry",
+    "aliases": ["strawberry", "jagoda", "fresh strawberry", "sveza jagoda"]
+  },
+  {
+    "canonical": "Strawberry Banana",
+    "aliases": ["strawberry banana", "jagoda banana", "banana strawberry", "banana jagoda"]
+  },
+  {
+    "canonical": "Mango",
+    "aliases": ["mango", "tropical mango", "mango ice", "ledeni mango", "fresh mango"]
+  },
+  {
+    "canonical": "Blueberry",
+    "aliases": ["blueberry", "borovnica", "wild blueberry", "divlja borovnica", "blueberry ice"]
+  },
+  {
+    "canonical": "Peach",
+    "aliases": ["peach", "breskva", "peach ice", "ledena breskva", "white peach", "bela breskva"]
+  },
+  {
+    "canonical": "Grape",
+    "aliases": ["grape", "grozdje", "grozhde", "white grape", "belo grozdje", "grape ice"]
+  },
+  {
+    "canonical": "Apple",
+    "aliases": ["apple", "jabuka", "green apple", "zelena jabuka", "sour apple", "kisela jabuka"]
+  },
+  {
+    "canonical": "Lemon",
+    "aliases": ["lemon", "limun", "lemon ice", "fresh lemon", "lemon mint"]
+  },
+  {
+    "canonical": "Mint",
+    "aliases": ["mint", "menta", "spearmint", "peppermint", "cool mint", "ice mint", "fresh mint", "double mint"]
+  },
+  {
+    "canonical": "Menthol",
+    "aliases": ["menthol", "mentol", "ice menthol", "arctic menthol", "fresh menthol"]
+  },
+  {
+    "canonical": "Tobacco",
+    "aliases": ["tobacco", "duvan", "virginia tobacco", "virginia duvan", "classic tobacco", "classic duvan"]
+  },
+  {
+    "canonical": "Vanilla",
+    "aliases": ["vanilla", "vanila", "vanilla custard", "vanila krem", "vanilla cream"]
+  },
+  {
+    "canonical": "Caramel",
+    "aliases": ["caramel", "karamel", "salted caramel", "slani karamel", "caramel tobacco"]
+  },
+  {
+    "canonical": "Banana",
+    "aliases": ["banana", "banana ice", "ledena banana", "banana milk", "banana milk ice"]
+  },
+  {
+    "canonical": "Pineapple",
+    "aliases": ["pineapple", "ananas", "pineapple ice", "ledeni ananas", "tropical pineapple"]
+  },
+  {
+    "canonical": "Cherry",
+    "aliases": ["cherry", "tresnja", "tresnja", "black cherry", "crna tresnja", "cherry cola", "tresnja kola"]
+  },
+  {
+    "canonical": "Melon",
+    "aliases": ["melon", "dinja", "cantaloupe", "honeydew", "melon ice", "ledena dinja"]
+  },
+  {
+    "canonical": "Passion Fruit",
+    "aliases": ["passion fruit", "marakuja", "passionfruit", "tropical passion", "passion ice"]
+  },
+  {
+    "canonical": "Dragon Fruit",
+    "aliases": ["dragon fruit", "zmajev plod", "pitaja", "pitahaya", "dragon fruit ice"]
+  },
+  {
+    "canonical": "Kiwi",
+    "aliases": ["kiwi", "kivi", "kiwi strawberry", "kivi jagoda", "kiwi ice"]
+  },
+  {
+    "canonical": "Lychee",
+    "aliases": ["lychee", "liciji", "lichee", "lichi", "lychee ice"]
+  },
+  {
+    "canonical": "Coconut",
+    "aliases": ["coconut", "kokos", "coconut milk", "kokosovo mleko", "toasted coconut"]
+  },
+  {
+    "canonical": "Orange",
+    "aliases": ["orange", "narandza", "orange ice", "fresh orange", "citrus orange"]
+  },
+  {
+    "canonical": "Cola",
+    "aliases": ["cola", "kola", "cola ice", "fresh cola", "cola lemon"]
+  },
+  {
+    "canonical": "Blue Razz",
+    "aliases": ["blue razz", "blue raspberry", "plava malina", "blue razz lemonade", "blue razz ice"]
+  },
+  {
+    "canonical": "Blackcurrant",
+    "aliases": ["blackcurrant", "crna ribizla", "black currant", "ribizla", "ribizle"]
+  },
+  {
+    "canonical": "Pink Lemonade",
+    "aliases": ["pink lemonade", "roza limonada", "pink lemonade ice", "strawberry lemonade", "jagoda limonada"]
+  },
+  {
+    "canonical": "Watermelon Mint",
+    "aliases": ["watermelon mint", "lubenica menta", "watermelon menthol", "mint watermelon"]
+  },
+  {
+    "canonical": "Mango Peach",
+    "aliases": ["mango peach", "mango breskva", "peach mango", "breskva mango"]
+  },
+  {
+    "canonical": "Strawberry Kiwi",
+    "aliases": ["strawberry kiwi", "jagoda kivi", "kiwi strawberry ice"]
+  }
+]

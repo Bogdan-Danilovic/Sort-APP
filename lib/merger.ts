@@ -13,7 +13,7 @@ import {
   type Currency,
   type QuantityUnit,
 } from '@/types';
-import { createMergeKey } from '@/lib/normalizer';
+import { createFlavorMergeKey } from '@/lib/normalizer';
 
 // ─── Helper funkcije ─────────────────────────────────────────
 
@@ -112,7 +112,7 @@ export function mergeProducts(sources: ParsedRow[][]): MergedProduct[] {
     for (const row of rows) {
       if (!row.name) continue;
 
-      const key = createMergeKey(row.name);
+      const key = createFlavorMergeKey(row.name);
 
       if (!productMap.has(key)) {
         // Novi proizvod
