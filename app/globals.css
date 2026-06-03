@@ -1,6 +1,6 @@
 /* ============================================================
    MergeKit — Global CSS
-   Design tokens: amber accent, DM Sans body, glass system
+   Design tokens: Light Premium Theme, Classic Tables
    ============================================================ */
 
 @tailwind base;
@@ -10,31 +10,32 @@
 /* ─── CSS Variables ──────────────────────────────────────── */
 :root {
   /* Surfaces */
-  --bg-0:       #000000;
-  --bg-1:       #09090b;       /* Zinc 950 — base bg */
-  --bg-2:       #18181b;       /* Zinc 900 — surface */
-  --bg-3:       #27272a;       /* Zinc 800 */
-  --bg-4:       #3f3f46;       /* Zinc 700 */
+  --bg-0:       #f4f4f5;       /* Zinc 100 — deeper background */
+  --bg-1:       #ffffff;       /* White — base bg */
+  --bg-2:       #fafafa;       /* Zinc 50 — surface */
+  --bg-3:       #f4f4f5;       /* Zinc 100 */
+  --bg-4:       #e4e4e7;       /* Zinc 200 */
 
-  /* Amber accent */
-  --accent:     #f59e0b;
-  --accent-dim: #d97706;
-  --accent-sub: rgba(245, 158, 11, 0.12);
-  --accent-glow:rgba(245, 158, 11, 0.35);
+  /* Indigo Accent (Premium SaaS look) */
+  --accent:     #4f46e5;       /* Indigo 600 */
+  --accent-dim: #4338ca;       /* Indigo 700 */
+  --accent-sub: rgba(79, 70, 229, 0.1);
+  --accent-glow:rgba(79, 70, 229, 0.35);
 
   /* Text */
-  --text-1:     #fafafa;
-  --text-2:     #a1a1aa;
-  --text-3:     #71717a;
+  --text-1:     #09090b;       /* Zinc 950 */
+  --text-2:     #3f3f46;       /* Zinc 700 */
+  --text-3:     #71717a;       /* Zinc 500 */
 
-  /* Glass system */
-  --glass-bg:      rgba(255, 255, 255, 0.03);
-  --glass-border:  rgba(255, 255, 255, 0.08);
+  /* Glass system (Adapted for light mode) */
+  --glass-bg:      rgba(255, 255, 255, 0.7);
+  --glass-border:  rgba(0, 0, 0, 0.05);
   --glass-blur:    12px;
 
   /* Borders */
-  --border:     rgba(255, 255, 255, 0.08);
-  --border-dim: rgba(255, 255, 255, 0.04);
+  --border:     #e4e4e7;       /* Zinc 200 */
+  --border-dim: #f4f4f5;       /* Zinc 100 */
+  --border-strong: #d4d4d8;    /* Zinc 300 for tables */
 
   /* Layout */
   --sidebar-w:  240px;
@@ -42,7 +43,7 @@
   --dock-h:     72px;
   --dock-gap:   16px;
 
-  /* Framer Motion spring preset (consumed in JS) */
+  /* Framer Motion spring preset */
   --spring-stiffness: 300;
   --spring-damping:   20;
 }
@@ -76,7 +77,7 @@ body {
 }
 
 /* ─── Custom scrollbar ───────────────────────────────────── */
-::-webkit-scrollbar       { width: 4px; height: 4px; }
+::-webkit-scrollbar       { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--bg-4); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
@@ -104,7 +105,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ─── Selection ──────────────────────────────────────────── */
 ::selection {
-  background: rgba(245, 158, 11, 0.25);
+  background: rgba(79, 70, 229, 0.2);
   color: var(--text-1);
 }
 
@@ -117,17 +118,18 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .glass-surface {
-  background: rgba(24, 24, 27, 0.7);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 
 .glass-accent {
-  background: rgba(245, 158, 11, 0.08);
+  background: rgba(79, 70, 229, 0.05);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(79, 70, 229, 0.15);
 }
 
 /* ─── App shell ──────────────────────────────────────────── */
@@ -148,6 +150,7 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
   z-index: 50;
   transition: width 200ms ease;
+  box-shadow: 1px 0 10px rgba(0,0,0,0.02);
 }
 
 .app-sidebar.collapsed { width: 64px; }
@@ -159,6 +162,7 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
   min-height: 100vh;
   transition: margin-left 200ms ease;
+  background-color: var(--bg-0); /* Slightly darker background for main area */
 }
 
 .app-main.sidebar-collapsed { margin-left: 64px; }
@@ -182,7 +186,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .nav-item:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--bg-3);
   color: var(--text-1);
 }
 
@@ -194,47 +198,25 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ─── Upload zone ────────────────────────────────────────── */
 .upload-zone {
-  border: 1.5px dashed var(--border);
+  border: 1.5px dashed var(--border-strong);
+  background: var(--bg-1);
   border-radius: 12px;
   padding: 48px 24px;
   text-align: center;
   transition: border-color 200ms ease, background 200ms ease;
   cursor: pointer;
   position: relative;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
 }
 
 .upload-zone:hover,
 .upload-zone.drag-over {
   border-color: var(--accent);
-  background: rgba(245, 158, 11, 0.04);
+  background: var(--accent-sub);
 }
 
 .upload-zone.drag-over {
   border-style: solid;
-  background: rgba(245, 158, 11, 0.08);
-}
-
-/* Animated dashed border on drag-over */
-.upload-zone-animated {
-  background-image: repeating-linear-gradient(
-    0deg, var(--accent), var(--accent) 8px,
-    transparent 8px, transparent 16px
-  ),
-  repeating-linear-gradient(
-    90deg, var(--accent), var(--accent) 8px,
-    transparent 8px, transparent 16px
-  ),
-  repeating-linear-gradient(
-    180deg, var(--accent), var(--accent) 8px,
-    transparent 8px, transparent 16px
-  ),
-  repeating-linear-gradient(
-    270deg, var(--accent), var(--accent) 8px,
-    transparent 8px, transparent 16px
-  );
-  background-size: 1.5px 100%, 100% 1.5px, 1.5px 100%, 100% 1.5px;
-  background-position: 0 0, 0 0, 100% 0, 0 100%;
-  background-repeat: no-repeat;
 }
 
 /* ─── Data table ─────────────────────────────────────────── */
@@ -243,30 +225,32 @@ h1, h2, h3, h4, h5, h6 {
   border-collapse: collapse;
   font-size: 0.8125rem;
   font-family: var(--font-dm-sans, 'DM Sans'), system-ui, sans-serif;
+  background: var(--bg-1);
+  border: 1px solid var(--border-strong);
 }
 
 .data-table thead {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: var(--bg-2);
+  background: var(--bg-3);
 }
 
 .data-table th {
   text-align: left;
-  padding: 8px 12px;
-  font-weight: 500;
-  color: var(--text-2);
+  padding: 10px 12px;
+  font-weight: 600;
+  color: var(--text-1);
   font-size: 0.6875rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  border-bottom: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   white-space: nowrap;
   user-select: none;
   cursor: pointer;
 }
 
-.data-table th:hover { color: var(--text-1); }
+.data-table th:hover { background: var(--bg-4); }
 
 .data-table th.numeric,
 .data-table td.numeric {
@@ -275,55 +259,55 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .data-table td {
-  padding: 8px 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
   color: var(--text-1);
   vertical-align: middle;
 }
 
 .data-table tr {
-  border-left: 2px solid transparent;
-  transition: background 80ms ease, border-color 80ms ease;
+  transition: background 150ms ease;
 }
 
 .data-table tr:hover {
-  background: rgba(255, 255, 255, 0.03);
-  border-left-color: var(--accent);
+  background: var(--bg-2);
+}
+
+.data-table tr:nth-child(even) {
+  background: #fbfbfc;
 }
 
 .data-table tr.suspect {
   background: rgba(245, 158, 11, 0.05);
 }
 
-.data-table tr.suspect:hover {
-  background: rgba(245, 158, 11, 0.09);
-  border-left-color: var(--accent);
-}
-
 .data-table tfoot tr {
-  background: var(--bg-2);
-  border-top: 1px solid var(--border);
+  background: var(--bg-3);
   font-weight: 600;
 }
 
 .data-table tfoot td {
   color: var(--text-1);
-  border-bottom: none;
+  border-top: 2px solid var(--border-strong);
 }
 
 /* ─── Mobile card (za MergedTable na <768px) ─────────────── */
 .merge-card {
-  background: var(--bg-2);
-  border: 1px solid var(--border);
+  background: var(--bg-1);
+  border: 1px solid var(--border-strong);
   border-radius: 12px;
   padding: 14px 16px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  transition: border-color 150ms ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
 }
 
-.merge-card:hover { border-color: rgba(245, 158, 11, 0.3); }
+.merge-card:hover { 
+  border-color: var(--accent);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
 
 .merge-card-row {
   display: flex;
@@ -334,38 +318,37 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ─── Price input ────────────────────────────────────────── */
 .price-input {
-  background: transparent;
-  border: 1px solid transparent;
+  background: var(--bg-1);
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
   padding: 0 8px;
-  height: 48px;
+  height: 36px;
   font-family: var(--font-jetbrains, 'JetBrains Mono'), monospace;
   font-size: 0.9rem;
   color: var(--text-1);
   text-align: right;
   width: 100px;
-  transition: border-color 120ms ease, background 120ms ease;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
   touch-action: manipulation;
 }
 
 .price-input:hover {
-  border-color: var(--border);
-  background: var(--bg-3);
+  border-color: var(--text-3);
 }
 
 .price-input:focus {
   outline: none;
   border-color: var(--accent);
-  background: var(--bg-3);
+  box-shadow: 0 0 0 2px var(--accent-sub);
 }
 
 /* ─── Skeleton shimmer ───────────────────────────────────── */
 .skeleton {
   background: linear-gradient(
     90deg,
-    var(--bg-2) 0%,
-    var(--bg-3) 40%,
-    var(--bg-2) 80%
+    var(--bg-3) 0%,
+    var(--bg-4) 40%,
+    var(--bg-3) 80%
   );
   background-size: 300% 100%;
   animation: shimmer 1.8s ease-in-out infinite;
@@ -383,15 +366,16 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   gap: 8px;
   padding: 5px 10px;
-  background: var(--bg-2);
-  border: 1px solid var(--border);
+  background: var(--bg-1);
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
   font-size: 0.8125rem;
   color: var(--text-1);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
   transition: border-color 100ms ease;
 }
 
-.file-chip:hover { border-color: var(--accent-dim); }
+.file-chip:hover { border-color: var(--accent); }
 
 .file-chip .chip-remove {
   color: var(--text-3);
@@ -415,10 +399,10 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: 0.02em;
 }
 
-.status-chip.success { background: rgba(16, 185, 129, 0.12); color: #6ee7b7; }
-.status-chip.warning { background: rgba(245, 158, 11, 0.12); color: #fcd34d; }
-.status-chip.error   { background: rgba(239, 68, 68, 0.12);  color: #fca5a5; }
-.status-chip.info    { background: rgba(59, 130, 246, 0.12); color: #93c5fd; }
+.status-chip.success { background: rgba(16, 185, 129, 0.12); color: #059669; }
+.status-chip.warning { background: rgba(245, 158, 11, 0.12); color: #d97706; }
+.status-chip.error   { background: rgba(239, 68, 68, 0.12);  color: #dc2626; }
+.status-chip.info    { background: rgba(79, 70, 229, 0.12); color: #4338ca; }
 
 /* ─── Export bar ─────────────────────────────────────────── */
 .export-bar {
@@ -428,10 +412,11 @@ h1, h2, h3, h4, h5, h6 {
   right: 0;
   z-index: 40;
   padding: 12px 16px;
-  background: rgba(9, 9, 11, 0.85);
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-strong);
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.03);
   display: flex;
   align-items: center;
   gap: 12px;
@@ -462,12 +447,12 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
   height: var(--dock-h);
   padding: 0 12px;
-  background: rgba(24, 24, 27, 0.75);
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-strong);
   border-radius: 9999px;
-  box-shadow: var(--dock-shadow, 0 8px 32px rgb(0 0 0 / 0.6), 0 2px 8px rgb(0 0 0 / 0.3));
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .dock-item {
@@ -489,7 +474,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .dock-item:hover    { color: var(--text-2); }
-.dock-item.active   { color: var(--accent); }
+.dock-item.active   { color: var(--accent); background: var(--accent-sub); }
 
 /* ─── Animations ─────────────────────────────────────────── */
 @keyframes fadeIn      { from { opacity: 0; }                            to { opacity: 1; } }
