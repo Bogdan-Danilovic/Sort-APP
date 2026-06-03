@@ -20,15 +20,14 @@ import { createClient } from '@/lib/supabase';
 import type { MergedProduct } from '@/types';
 
 import {
-  GitMerge,
   ArrowRight,
   ArrowLeft,
   RotateCcw,
-  Save,
   Undo2,
   Search,
   X,
 } from 'lucide-react';
+import MergeKitLogo from '@/components/ui/MergeKitLogo';
 
 interface MergePageClientProps {
   locale: string;
@@ -88,18 +87,16 @@ export default function MergePageClient({
 
   return (
     <div className="max-w-6xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1
-            className="text-xl font-semibold flex items-center gap-2.5"
-            style={{ color: 'var(--text-1)' }}
-          >
-            <GitMerge size={20} style={{ color: 'var(--accent)' }} />
-            {t('merge.title')}
-          </h1>
+      {/* Header: logo u centru, step indicator desno */}
+      <div
+        className="items-center mb-8"
+        style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr' }}
+      >
+        <div />
+        <MergeKitLogo locale={locale} />
+        <div className="flex justify-end">
+          <StepIndicator currentStep={session.step} />
         </div>
-        <StepIndicator currentStep={session.step} />
       </div>
 
       {/* Steps */}
