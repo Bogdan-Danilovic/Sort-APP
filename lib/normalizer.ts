@@ -118,6 +118,9 @@ export function normalize(text: string): string {
 export function normalizeProductName(name: string): string {
   let result = normalize(name);
 
+  // Ukloni emoji karaktere
+  result = result.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}\u{1F000}-\u{1FFFF}]/gu, '').trim();
+
   // Ukloni tačke, zareze, dvotačke na krajevima
   result = result.replace(/[.,;:!?]+$/, '').trim();
 

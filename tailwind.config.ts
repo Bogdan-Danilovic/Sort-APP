@@ -11,96 +11,64 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Osnovna paleta — tamni mornarsko-sivi tonovi (ne pure black)
+        // OLED/Zinc premium dark theme
         background: {
-          DEFAULT: '#0b1120',  // Najdublji sloj
-          subtle: '#0f172a',   // Sloj iznad
-          elevated: '#1e293b', // Podignuti elementi
-          overlay: '#293548',  // Hover/focus stanja
+          DEFAULT: '#09090b',  // OLED black / Zinc 950
+          subtle: '#18181b',   // Zinc 900
+          elevated: '#27272a', // Zinc 800
+          overlay: '#3f3f46',  // Zinc 700
         },
-        // Indigo akcenat
+        // Vibrant neon indigo accent
         accent: {
           50:  '#eef2ff',
           100: '#e0e7ff',
           200: '#c7d2fe',
           300: '#a5b4fc',
           400: '#818cf8',
-          500: '#6366f1', // Primarna
+          500: '#6366f1', // Primary
           600: '#4f46e5',
           700: '#4338ca',
           800: '#3730a3',
           900: '#312e81',
           950: '#1e1b4b',
         },
-        // Amber akcenat (upozorenja, highlights)
         highlight: {
-          50:  '#fffbeb',
-          100: '#fef3c7',
-          200: '#fde68a',
-          300: '#fcd34d',
-          400: '#fbbf24',
-          500: '#f59e0b', // Primarna
-          600: '#d97706',
-          700: '#b45309',
-          800: '#92400e',
-          900: '#78350f',
+          500: '#f59e0b',
         },
-        // Površine
         surface: {
-          0:   '#0b1120',
-          1:   '#0f172a',
-          2:   '#1e293b',
-          3:   '#293548',
-          4:   '#334155',
+          0: '#09090b',
+          1: '#18181b',
+          2: '#27272a',
+          3: '#3f3f46',
+          4: '#52525b',
         },
-        // Tekstovi
         text: {
-          primary:   '#f1f5f9',
-          secondary: '#94a3b8',
-          tertiary:  '#64748b',
-          disabled:  '#475569',
-          inverse:   '#0f172a',
+          primary:   '#fafafa', // Zinc 50
+          secondary: '#a1a1aa', // Zinc 400
+          tertiary:  '#71717a', // Zinc 500
+          disabled:  '#52525b', // Zinc 600
+          inverse:   '#09090b',
         },
-        // Status boje (muted)
-        success: {
-          DEFAULT: '#10b981',
-          muted:   '#064e3b',
-          text:    '#6ee7b7',
-        },
-        warning: {
-          DEFAULT: '#f59e0b',
-          muted:   '#451a03',
-          text:    '#fcd34d',
-        },
-        error: {
-          DEFAULT: '#ef4444',
-          muted:   '#450a0a',
-          text:    '#fca5a5',
-        },
-        info: {
-          DEFAULT: '#3b82f6',
-          muted:   '#1e3a5f',
-          text:    '#93c5fd',
-        },
+        success: { DEFAULT: '#10b981', muted: '#064e3b', text: '#6ee7b7' },
+        warning: { DEFAULT: '#f59e0b', muted: '#451a03', text: '#fcd34d' },
+        error:   { DEFAULT: '#ef4444', muted: '#450a0a', text: '#fca5a5' },
+        info:    { DEFAULT: '#3b82f6', muted: '#1e3a5f', text: '#93c5fd' },
       },
       fontFamily: {
-        // UI font
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        // Podaci, brojevi, kod
+        sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
-        // Headings
-        display: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
       },
       fontSize: {
-        '2xs': ['0.625rem', { lineHeight: '0.875rem' }],
-        xs:    ['0.75rem',  { lineHeight: '1rem' }],
-        sm:    ['0.8125rem',{ lineHeight: '1.25rem' }],
-        base:  ['0.875rem', { lineHeight: '1.5rem' }],
-        lg:    ['1rem',     { lineHeight: '1.625rem' }],
-        xl:    ['1.125rem', { lineHeight: '1.75rem' }],
-        '2xl': ['1.25rem',  { lineHeight: '1.875rem' }],
-        '3xl': ['1.5rem',   { lineHeight: '2rem' }],
-        '4xl': ['1.875rem', { lineHeight: '2.25rem' }],
+        '2xs': ['0.625rem', { lineHeight: '0.875rem', letterSpacing: '0.02em' }],
+        xs:    ['0.75rem',  { lineHeight: '1rem', letterSpacing: '0.01em' }],
+        sm:    ['0.8125rem',{ lineHeight: '1.25rem', letterSpacing: '0.01em' }],
+        base:  ['0.875rem', { lineHeight: '1.5rem', letterSpacing: '-0.01em' }],
+        lg:    ['1rem',     { lineHeight: '1.625rem', letterSpacing: '-0.015em' }],
+        xl:    ['1.125rem', { lineHeight: '1.75rem', letterSpacing: '-0.015em' }],
+        '2xl': ['1.25rem',  { lineHeight: '1.875rem', letterSpacing: '-0.02em' }],
+        '3xl': ['1.5rem',   { lineHeight: '2rem', letterSpacing: '-0.02em' }],
+        '4xl': ['1.875rem', { lineHeight: '2.25rem', letterSpacing: '-0.02em' }],
       },
       spacing: {
         // Kompaktni spacing za dense layout

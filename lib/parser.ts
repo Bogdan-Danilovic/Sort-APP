@@ -26,6 +26,9 @@ const QTY_RE = /^(\d+[.,]?\d*)\s*(kg|g|l|ml|kom|m|cm|kos|komad[ae]?)?$/i;
 const COMPOUND_TOKEN_RE =
   /^(\d+[.,]?\d*)\s*(kg|g|l|ml|kom|m|cm|din\.?|rsd|eur|€|\$)$/i;
 
+/** Uklanja emoji karaktere iz teksta */
+const EMOJI_RE = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}\u{1F000}-\u{1FFFF}]/gu;
+
 /** BOM karakter koji treba ukloniti */
 const BOM = '\uFEFF';
 
@@ -35,7 +38,7 @@ const CHAT_PREAMBLE_RE =
 
 /** Linije koje su samo metapodaci chata (datum, ime pošiljaoca itd.) */
 const CHAT_META_RE =
-  /^\[?\d{1,2}[.\-/]\d{1,2}[.\-/]\d{2,4}[\],\s]|^\w+\s+\w+:/;
+  /^\[?\d{1,2}[.\-/]\d{1,2}[.\-/]\d{2,4}[\],\s]|^\w+\s+\w+:(?!\s*\d)/;
 
 /** Minimalna dužina da bi token bio ime proizvoda */
 const MIN_NAME_LENGTH = 2;
@@ -149,6 +152,10 @@ function parseFreeTextLine(
   let cleaned = line.trim();
 
   // Preskočiti prazne redove
+  if (!cleaned) return null;
+
+  // Ukloniti emoji karaktere (iPhone Notes, WhatsApp itd.)
+  cleaned = cleaned.replace(EMOJI_RE, '').trim();
   if (!cleaned) return null;
 
   // Ukloniti chat preamble

@@ -20,7 +20,7 @@ import type { MergeSessionRow, MergedProduct } from '@/types';
 interface HistoryClientProps {
   locale: string;
   userId: string;
-  onLoadSession: (products: MergedProduct[]) => void;
+  onLoadSession?: (products: MergedProduct[]) => void;
 }
 
 function formatDate(dateStr: string): string {
@@ -96,7 +96,16 @@ export default function HistoryClient({
 
   const handleLoadSession = (session: MergeSessionRow) => {
     const products = session.merged_result as unknown as MergedProduct[];
-    onLoadSession(products);
+    if (onLoadSession) {
+      onLoadSession(products);
+    } else {
+      // Čuvamo u sessionStorage, merge page ga učitava
+      try {
+        sessionStorage.setItem('loaded-session', JSON.stringify(products));
+      } catch {
+        // sessionStorage nije dostupan
+      }
+    }
     router.push(`/${locale}/merge`);
   };
 
@@ -274,115 +283,183 @@ export default function HistoryClient({
           )}
         </div>
       ) : (
-        <div
-          className="rounded-lg overflow-hidden"
-          style={{ border: '1px solid var(--border)' }}
-        >
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th style={{ width: 40 }}>
-                  <input
-                    type="checkbox"
-                    checked={
-                      selected.size === filteredSessions.length &&
-                      filteredSessions.length > 0
-                    }
-                    onChange={() =>
-                      selected.size === filteredSessions.length
-                        ? deselectAll()
-                        : selectAll()
-                    }
-                    className="accent-indigo-500"
-                  />
-                </th>
-                <th>{t('columns.name')}</th>
-                <th className="numeric">{t('columns.products')}</th>
-                <th className="numeric">{t('columns.sources')}</th>
-                <th>{t('columns.date')}</th>
-                <th>{t('columns.actions')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredSessions.map((session) => {
-                const productCount = Array.isArray(session.merged_result)
-                  ? session.merged_result.length
-                  : 0;
-                const fileCount = Array.isArray(session.source_files)
-                  ? session.source_files.length
-                  : 0;
-                const isSelected = selected.has(session.id);
+        <div className="flex flex-col gap-4">
+          {/* ─── MOBILE VIEW (Cards) ─── */}
+          <div className="md:hidden flex flex-col gap-3">
+            {filteredSessions.map((session) => {
+              const productCount = Array.isArray(session.merged_result)
+                ? session.merged_result.length
+                : 0;
+              const fileCount = Array.isArray(session.source_files)
+                ? session.source_files.length
+                : 0;
+              const isSelected = selected.has(session.id);
 
-                return (
-                  <motion.tr
-                    key={session.id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    style={{
-                      background: isSelected
-                        ? 'rgba(99, 102, 241, 0.06)'
-                        : undefined,
-                    }}
-                  >
-                    <td>
+              return (
+                <motion.div
+                  key={session.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="glass rounded-xl p-4 flex flex-col gap-3 relative overflow-hidden"
+                  style={{
+                    borderColor: isSelected ? 'rgba(99, 102, 241, 0.5)' : 'var(--border)',
+                    background: isSelected ? 'rgba(99, 102, 241, 0.1)' : undefined,
+                  }}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-3">
                       <input
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => toggleSelect(session.id)}
-                        className="accent-indigo-500"
+                        className="mt-1 accent-indigo-500 w-4 h-4 rounded"
                       />
-                    </td>
-                    <td>
-                      <span
-                        className="font-medium"
-                        style={{ color: 'var(--text-1)' }}
-                      >
-                        {session.session_name}
-                      </span>
-                      {session.notes && (
-                        <p
-                          className="text-xs mt-0.5 truncate max-w-xs"
-                          style={{ color: 'var(--text-3)' }}
-                        >
-                          {session.notes}
-                        </p>
-                      )}
-                    </td>
-                    <td className="numeric font-mono">{productCount}</td>
-                    <td className="numeric font-mono">{fileCount}</td>
-                    <td>
-                      <span
-                        className="text-xs"
-                        style={{ color: 'var(--text-3)' }}
-                      >
-                        {formatDate(session.created_at)}
-                      </span>
-                    </td>
-                    <td>
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => handleLoadSession(session)}
-                          className="text-xs font-medium transition-colors"
-                          style={{ color: '#818cf8' }}
-                          title={t('load')}
-                        >
-                          <Upload size={13} strokeWidth={2} />
-                        </button>
-                        <button
-                          onClick={() => setConfirmDelete(session.id)}
-                          className="text-xs transition-colors"
-                          style={{ color: 'var(--text-3)' }}
-                          title={t('delete')}
-                        >
-                          <Trash2 size={13} strokeWidth={2} />
-                        </button>
+                      <div>
+                        <h3 className="font-semibold text-sm text-[var(--text-1)]">
+                          {session.session_name}
+                        </h3>
+                        <span className="text-[10px] text-[var(--text-3)]">
+                          {formatDate(session.created_at)}
+                        </span>
                       </div>
-                    </td>
-                  </motion.tr>
-                );
-              })}
-            </tbody>
-          </table>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleLoadSession(session)}
+                        className="p-1.5 rounded-md bg-[var(--accent)] text-white shadow-glow-sm"
+                        title={t('load')}
+                      >
+                        <Upload size={14} strokeWidth={2} />
+                      </button>
+                      <button
+                        onClick={() => setConfirmDelete(session.id)}
+                        className="p-1.5 rounded-md bg-red-500/10 text-red-400"
+                        title={t('delete')}
+                      >
+                        <Trash2 size={14} strokeWidth={2} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {session.notes && (
+                    <p className="text-xs text-[var(--text-2)] bg-[var(--bg-2)] p-2 rounded-lg italic">
+                      {session.notes}
+                    </p>
+                  )}
+
+                  <div className="flex gap-4 mt-1 border-t border-[var(--border-dim)] pt-2">
+                    <div className="flex flex-col">
+                      <span className="text-[10px] text-[var(--text-3)] uppercase tracking-wider">Proizvodi</span>
+                      <span className="font-mono text-sm font-bold text-[var(--text-1)]">{productCount}</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-[10px] text-[var(--text-3)] uppercase tracking-wider">Izvori</span>
+                      <span className="font-mono text-sm font-bold text-[var(--text-1)]">{fileCount}</span>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* ─── DESKTOP VIEW (Table) ─── */}
+          <div className="hidden md:block rounded-xl overflow-hidden glass border-none shadow-lg">
+            <table className="data-table w-full">
+              <thead>
+                <tr className="bg-[var(--bg-2)]/80 backdrop-blur-md">
+                  <th style={{ width: 40 }} className="pl-4">
+                    <input
+                      type="checkbox"
+                      checked={
+                        selected.size === filteredSessions.length &&
+                        filteredSessions.length > 0
+                      }
+                      onChange={() =>
+                        selected.size === filteredSessions.length
+                          ? deselectAll()
+                          : selectAll()
+                      }
+                      className="accent-indigo-500 w-4 h-4 rounded cursor-pointer"
+                    />
+                  </th>
+                  <th>{t('columns.name')}</th>
+                  <th className="numeric">{t('columns.products')}</th>
+                  <th className="numeric">{t('columns.sources')}</th>
+                  <th>{t('columns.date')}</th>
+                  <th className="pr-4">{t('columns.actions')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredSessions.map((session) => {
+                  const productCount = Array.isArray(session.merged_result)
+                    ? session.merged_result.length
+                    : 0;
+                  const fileCount = Array.isArray(session.source_files)
+                    ? session.source_files.length
+                    : 0;
+                  const isSelected = selected.has(session.id);
+
+                  return (
+                    <motion.tr
+                      key={session.id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="hover:bg-white/5 transition-colors border-b border-[var(--border)]"
+                      style={{
+                        background: isSelected
+                          ? 'rgba(99, 102, 241, 0.08)'
+                          : undefined,
+                      }}
+                    >
+                      <td className="pl-4 py-3">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => toggleSelect(session.id)}
+                          className="accent-indigo-500 w-4 h-4 rounded cursor-pointer"
+                        />
+                      </td>
+                      <td className="py-3">
+                        <span className="font-semibold text-sm text-[var(--text-1)]">
+                          {session.session_name}
+                        </span>
+                        {session.notes && (
+                          <p className="text-[10px] mt-1 truncate max-w-xs text-[var(--text-3)]">
+                            {session.notes}
+                          </p>
+                        )}
+                      </td>
+                      <td className="numeric font-mono text-[var(--text-2)] py-3">{productCount}</td>
+                      <td className="numeric font-mono text-[var(--text-2)] py-3">{fileCount}</td>
+                      <td className="py-3">
+                        <span className="text-xs text-[var(--text-3)]">
+                          {formatDate(session.created_at)}
+                        </span>
+                      </td>
+                      <td className="pr-4 py-3">
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => handleLoadSession(session)}
+                            className="flex items-center justify-center p-1.5 rounded bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 transition-colors"
+                            title={t('load')}
+                          >
+                            <Upload size={14} strokeWidth={2.5} />
+                          </button>
+                          <button
+                            onClick={() => setConfirmDelete(session.id)}
+                            className="flex items-center justify-center p-1.5 rounded bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors"
+                            title={t('delete')}
+                          >
+                            <Trash2 size={14} strokeWidth={2.5} />
+                          </button>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

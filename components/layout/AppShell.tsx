@@ -16,7 +16,7 @@ export default function AppShell({ children, locale, userEmail }: AppShellProps)
       {/* Main content */}
       <main className="app-main">
         <div
-          className="min-h-full p-6 pb-20 md:pb-6"
+          className="min-h-full p-6 pb-28 md:pb-6"
           style={{ maxWidth: '100%' }}
         >
           {children}

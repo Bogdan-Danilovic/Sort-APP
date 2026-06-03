@@ -28,29 +28,33 @@ export default function MobileNav({ locale }: MobileNavProps) {
   const isActive = (href: string) => pathname.includes(`/${locale}/${href}`);
 
   return (
-    <nav className="mobile-nav">
-      {NAV_ITEMS.map((item) => {
-        const active = isActive(item.href);
-        const Icon = item.icon;
-        const label = t(item.labelKey as Parameters<typeof t>[0]);
+    <div className="mobile-nav-container">
+      <nav className="mobile-nav">
+        {NAV_ITEMS.map((item) => {
+          const active = isActive(item.href);
+          const Icon = item.icon;
+          const label = t(item.labelKey as Parameters<typeof t>[0]);
 
-        return (
-          <Link
-            key={item.href}
-            href={`/${locale}/${item.href}`}
-            className="flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-colors"
-            style={{
-              color: active ? '#818cf8' : 'var(--text-3)',
-              background: active ? 'rgba(99, 102, 241, 0.1)' : 'transparent',
-            }}
-          >
-            <Icon size={20} strokeWidth={active ? 2.5 : 2} />
-            {active && (
-              <span className="text-2xs font-medium">{String(label)}</span>
-            )}
-          </Link>
-        );
-      })}
-    </nav>
+          return (
+            <Link
+              key={item.href}
+              href={`/${locale}/${item.href}`}
+              className="relative flex flex-col items-center justify-center w-16 h-12 transition-all duration-300 rounded-2xl"
+              style={{
+                color: active ? '#818cf8' : 'var(--text-3)',
+                background: active ? 'rgba(99, 102, 241, 0.15)' : 'transparent',
+              }}
+            >
+              <Icon size={active ? 22 : 20} strokeWidth={active ? 2.5 : 2} className="transition-all duration-300" />
+              {active && (
+                <span className="text-[10px] font-semibold mt-1 tracking-tight animate-fade-in">
+                  {String(label)}
+                </span>
+              )}
+            </Link>
+          );
+        })}
+      </nav>
+    </div>
   );
 }

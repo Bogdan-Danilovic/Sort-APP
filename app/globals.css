@@ -11,19 +11,26 @@
 
 /* ─── CSS Variables ──────────────────────────────────────── */
 :root {
-  --bg-0:       #0b1120;
-  --bg-1:       #0f172a;
-  --bg-2:       #1e293b;
-  --bg-3:       #293548;
-  --bg-4:       #334155;
+  --bg-0:       #000000;       /* Deep OLED black */
+  --bg-1:       #09090b;       /* Zinc 950 */
+  --bg-2:       #18181b;       /* Zinc 900 */
+  --bg-3:       #27272a;       /* Zinc 800 */
+  --bg-4:       #3f3f46;       /* Zinc 700 */
+  
+  /* Neon Indigo Accent */
   --accent:     #6366f1;
   --accent-dim: #4f46e5;
+  --accent-glow:rgba(99, 102, 241, 0.4);
+  
   --highlight:  #f59e0b;
-  --text-1:     #f1f5f9;
-  --text-2:     #94a3b8;
-  --text-3:     #64748b;
-  --border:     #1e293b;
-  --border-dim: #293548;
+  --text-1:     #fafafa;
+  --text-2:     #a1a1aa;
+  --text-3:     #71717a;
+  
+  /* Delicate borders */
+  --border:     rgba(255, 255, 255, 0.08);
+  --border-dim: rgba(255, 255, 255, 0.04);
+  
   --sidebar-w:  240px;
   --topbar-h:   48px;
 }
@@ -42,17 +49,17 @@ html {
 }
 
 body {
-  background-color: var(--bg-0);
+  background-color: var(--bg-1);
   color: var(--text-1);
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--font-jakarta), 'Inter', system-ui, sans-serif;
   font-size: 0.875rem;
   line-height: 1.5;
 }
 
 /* ─── Scrollbar (custom) ─────────────────────────────────── */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -61,7 +68,7 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: var(--bg-4);
-  border-radius: 3px;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -70,9 +77,25 @@ body {
 
 /* ─── Typography ─────────────────────────────────────────── */
 h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-jakarta), system-ui, sans-serif;
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   color: var(--text-1);
+}
+
+/* ─── Glassmorphism Utilities ────────────────────────────── */
+.glass {
+  background: rgba(24, 24, 27, 0.65); /* Zinc 900 semi-transparent */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+}
+
+.glass-accent {
+  background: rgba(99, 102, 241, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(99, 102, 241, 0.2);
 }
 
 /* ─── Focus visible ──────────────────────────────────────── */
@@ -450,7 +473,7 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 0.8125rem;
 }
 
-/* ─── Mobile nav ─────────────────────────────────────────── */
+/* ─── Mobile nav (Floating Glass Dock) ─────────────── */
 @media (max-width: 768px) {
   .app-sidebar {
     display: none;
@@ -460,24 +483,35 @@ h1, h2, h3, h4, h5, h6 {
     margin-left: 0 !important;
   }
 
-  .mobile-nav {
+  .mobile-nav-container {
     display: flex;
   }
 }
 
-.mobile-nav {
+.mobile-nav-container {
   display: none;
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 56px;
-  background: var(--bg-1);
-  border-top: 1px solid var(--border);
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 50;
+  width: 90%;
+  max-width: 400px;
+}
+
+.mobile-nav {
+  display: flex;
   align-items: center;
   justify-content: space-around;
+  width: 100%;
+  height: 64px;
   padding: 0 8px;
+  background: rgba(24, 24, 27, 0.7); /* Zinc 900 */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 32px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
 }
 
 /* ─── Animations ─────────────────────────────────────────── */

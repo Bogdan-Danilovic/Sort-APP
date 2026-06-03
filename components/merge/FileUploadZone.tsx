@@ -117,17 +117,16 @@ export default function FileUploadZone({
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col items-center gap-3"
+            className="flex flex-col items-center gap-4"
           >
             <motion.div
               animate={{ y: [0, -6, 0] }}
-              transition={{ repeat: Infinity, duration: 0.8 }}
-              className="w-12 h-12 rounded-xl flex items-center justify-center"
-              style={{ background: 'rgba(99, 102, 241, 0.2)' }}
+              transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
+              className="w-14 h-14 rounded-2xl flex items-center justify-center bg-indigo-500/20 border border-indigo-500/30 shadow-[0_0_20px_rgba(99,102,241,0.3)]"
             >
-              <Upload size={22} style={{ color: 'var(--accent)' }} />
+              <Upload size={24} className="text-indigo-400" />
             </motion.div>
-            <p className="font-medium" style={{ color: '#818cf8' }}>
+            <p className="font-semibold text-indigo-400 tracking-wide">
               {t('dropzoneActive')}
             </p>
           </motion.div>
@@ -139,27 +138,20 @@ export default function FileUploadZone({
             exit={{ opacity: 0 }}
             className="flex flex-col items-center gap-3"
           >
-            <div
-              className="w-12 h-12 rounded-xl flex items-center justify-center"
-              style={{ background: 'var(--bg-3)' }}
-            >
-              <Upload size={20} style={{ color: 'var(--text-3)' }} />
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-[var(--bg-2)] border border-[var(--border)] shadow-sm group-hover:scale-105 transition-transform duration-300">
+              <Upload size={20} className="text-[var(--text-3)] group-hover:text-indigo-400 transition-colors" />
             </div>
             <div className="flex flex-col items-center gap-1">
-              <p className="font-medium" style={{ color: 'var(--text-1)' }}>
+              <p className="font-semibold text-[var(--text-1)]">
                 {t('dropzone')}
               </p>
-              <p className="text-xs" style={{ color: 'var(--text-3)' }}>
+              <p className="text-xs text-[var(--text-3)]">
                 {t('dropzoneHint')}
               </p>
             </div>
             <button
               type="button"
-              className="text-xs font-medium px-3 py-1.5 rounded-md transition-colors"
-              style={{
-                background: 'rgba(99, 102, 241, 0.12)',
-                color: '#818cf8',
-              }}
+              className="text-xs font-semibold px-4 py-2 mt-1 rounded-lg transition-all duration-300 bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 hover:shadow-glow-sm"
               onClick={(e) => {
                 e.stopPropagation();
                 document.getElementById('file-input')?.click();

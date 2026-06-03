@@ -37,11 +37,16 @@ export default function LoginForm({ locale }: LoginFormProps) {
       });
 
       if (authError) {
-        setError(
-          authError.message.includes('Invalid')
-            ? t('errors.invalidCredentials')
-            : t('errors.generic')
-        );
+        const msg = authError.message.toLowerCase();
+        if (msg.includes('invalid') || msg.includes('credentials') || msg.includes('password')) {
+          setError(t('errors.invalidCredentials'));
+        } else if (msg.includes('confirm') || msg.includes('email') || msg.includes('not confirmed')) {
+          setError('Email adresa nije potvrđena. Proverite inbox i kliknite na link za potvrdu.');
+        } else if (msg.includes('rate') || msg.includes('limit')) {
+          setError('Previše pokušaja. Sačekajte par minuta pa pokušajte ponovo.');
+        } else {
+          setError(`Greška: ${authError.message}`);
+        }
         return;
       }
 
