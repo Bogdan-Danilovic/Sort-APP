@@ -72,49 +72,53 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
 
   return (
     <AppShell locale={locale} userEmail={session.user.email}>
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="max-w-5xl mx-auto space-y-8">
 
         {/* Hero card */}
         <div
-          className="rounded-xl p-6"
+          className="rounded-2xl p-8"
           style={{
             background: '#111111',
             border: '1px solid #1f1f1f',
           }}
         >
-          <div className="flex items-center gap-3 mb-4">
-            <div
-              className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
-              style={{ background: 'linear-gradient(135deg, #1a4eda, #3a81f6)', color: '#ffffff' }}
-            >
-              {userInitials}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+            {/* User info */}
+            <div className="flex items-center gap-4">
+              <div
+                className="w-14 h-14 rounded-2xl flex items-center justify-center text-base font-bold flex-shrink-0"
+                style={{ background: 'linear-gradient(135deg, #1a4eda, #3a81f6)', color: '#ffffff' }}
+              >
+                {userInitials}
+              </div>
+              <div>
+                <h1 className="text-xl font-semibold mb-1" style={{ color: '#fafafa' }}>
+                  Dobrodošli nazad
+                </h1>
+                <p className="text-sm font-mono" style={{ color: '#525252' }}>
+                  {session.user.email}
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-base font-semibold" style={{ color: '#fafafa' }}>
-                Dobrodošli nazad
-              </h1>
-              <p className="text-xs font-mono" style={{ color: '#a1a1a1' }}>
-                {session.user.email}
-              </p>
-            </div>
-          </div>
 
-          <Link
-            href={`/${locale}/merge`}
-            className="inline-flex items-center gap-2.5 px-5 py-3 rounded-xl text-sm font-semibold transition-all"
-            style={{
-              background: 'linear-gradient(135deg, #2563ef, #3a81f6)',
-              color: '#ffffff',
-              boxShadow: '0 4px 20px rgba(58, 129, 246, 0.35)',
-            }}
-          >
-            <GitMerge size={16} strokeWidth={2} />
-            Novo spajanje
-          </Link>
+            {/* CTA */}
+            <Link
+              href={`/${locale}/merge`}
+              className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl text-sm font-semibold transition-all self-start sm:self-auto"
+              style={{
+                background: 'linear-gradient(135deg, #2563ef, #3a81f6)',
+                color: '#ffffff',
+                boxShadow: '0 4px 24px rgba(58, 129, 246, 0.4)',
+              }}
+            >
+              <GitMerge size={16} strokeWidth={2} />
+              Novo spajanje
+            </Link>
+          </div>
         </div>
 
         {/* Stats — bento grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
             {
               label: 'Ukupno spajanja',
@@ -140,20 +144,25 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
             return (
               <div
                 key={stat.label}
-                className="p-4 rounded-xl"
+                className="p-6 rounded-xl"
                 style={{
                   background: '#111111',
                   border: '1px solid #1f1f1f',
                 }}
               >
-                <div className="flex items-center justify-between mb-3">
-                  <p className="text-xs font-medium" style={{ color: '#a1a1a1' }}>
+                <div className="flex items-center justify-between mb-4">
+                  <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#525252' }}>
                     {stat.label}
                   </p>
-                  <Icon size={15} style={{ color: stat.color }} />
+                  <div
+                    className="w-8 h-8 rounded-lg flex items-center justify-center"
+                    style={{ background: 'rgba(255,255,255,0.04)' }}
+                  >
+                    <Icon size={15} style={{ color: stat.color }} />
+                  </div>
                 </div>
                 <p
-                  className={`text-2xl font-bold ${stat.mono ? 'font-mono' : ''}`}
+                  className={`text-3xl font-bold ${stat.mono ? 'font-mono' : ''}`}
                   style={{ color: '#fafafa' }}
                 >
                   {stat.value}
@@ -163,43 +172,42 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
           })}
         </div>
 
-        {/* Quick links */}
-        <div className="flex gap-3">
-          <Link
-            href={`/${locale}/history`}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all"
-            style={{
-              background: '#111111',
-              color: '#d4d4d4',
-              border: '1px solid #1f1f1f',
-            }}
-          >
-            <History size={15} strokeWidth={2} />
-            Istorija
-          </Link>
-        </div>
-
         {/* Recent sessions */}
         <div>
-          <h2 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#525252' }}>
-            Poslednja spajanja
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#525252' }}>
+              Poslednja spajanja
+            </h2>
+            <Link
+              href={`/${locale}/history`}
+              className="flex items-center gap-1.5 text-xs font-medium transition-colors"
+              style={{ color: '#91c5ff' }}
+            >
+              <History size={13} strokeWidth={2} />
+              Sva spajanja
+            </Link>
+          </div>
 
           {typedSessions.length === 0 ? (
             <div
-              className="py-12 text-center rounded-xl"
+              className="py-16 text-center rounded-2xl"
               style={{ background: '#111111', border: '1px solid #1f1f1f' }}
             >
-              <Package size={24} className="mx-auto mb-3" style={{ color: '#333333' }} />
-              <p className="font-medium mb-1 text-sm" style={{ color: '#a1a1a1' }}>
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4"
+                style={{ background: '#1a1a1a' }}
+              >
+                <Package size={22} style={{ color: '#333333' }} />
+              </div>
+              <p className="font-medium mb-2 text-sm" style={{ color: '#a1a1a1' }}>
                 Još uvek nema sačuvanih spajanja
               </p>
-              <p className="text-xs mb-4" style={{ color: '#525252' }}>
+              <p className="text-xs mb-6" style={{ color: '#333333' }}>
                 Počnite sa prvim spajanjem inventara.
               </p>
               <Link
                 href={`/${locale}/merge`}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium"
                 style={{ background: 'linear-gradient(135deg, #2563ef, #3a81f6)', color: '#ffffff' }}
               >
                 <GitMerge size={14} strokeWidth={2} />
@@ -208,21 +216,21 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
             </div>
           ) : (
             <div
-              className="rounded-xl overflow-hidden"
-              style={{ border: '1px solid #1f1f1f' }}
+              className="rounded-2xl overflow-hidden"
+              style={{ border: '1px solid #1f1f1f', background: '#111111' }}
             >
-              <table className="data-table">
+              <table className="w-full">
                 <thead>
-                  <tr>
-                    <th>Naziv</th>
-                    <th className="numeric">Proizvodi</th>
-                    <th className="numeric">Fajlovi</th>
-                    <th>Datum</th>
-                    <th />
+                  <tr style={{ borderBottom: '1px solid #1a1a1a' }}>
+                    <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider" style={{ color: '#525252' }}>Naziv</th>
+                    <th className="text-right px-6 py-4 text-xs font-semibold uppercase tracking-wider" style={{ color: '#525252' }}>Proizvodi</th>
+                    <th className="text-right px-6 py-4 text-xs font-semibold uppercase tracking-wider" style={{ color: '#525252' }}>Fajlovi</th>
+                    <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider" style={{ color: '#525252' }}>Datum</th>
+                    <th className="px-6 py-4" />
                   </tr>
                 </thead>
                 <tbody>
-                  {typedSessions.map((s) => {
+                  {typedSessions.map((s, i) => {
                     const productCount = Array.isArray(s.merged_result)
                       ? s.merged_result.length
                       : 0;
@@ -231,34 +239,39 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
                       : 0;
 
                     return (
-                      <tr key={s.id}>
-                        <td>
+                      <tr
+                        key={s.id}
+                        style={{
+                          borderBottom: i < typedSessions.length - 1 ? '1px solid #1a1a1a' : 'none',
+                        }}
+                      >
+                        <td className="px-6 py-4">
                           <span className="font-medium text-sm" style={{ color: '#fafafa' }}>
                             {s.session_name}
                           </span>
                         </td>
-                        <td className="numeric font-mono text-sm" style={{ color: '#d4d4d4' }}>
+                        <td className="text-right px-6 py-4 font-mono text-sm" style={{ color: '#d4d4d4' }}>
                           {productCount}
                         </td>
-                        <td className="numeric font-mono text-sm" style={{ color: '#d4d4d4' }}>
+                        <td className="text-right px-6 py-4 font-mono text-sm" style={{ color: '#d4d4d4' }}>
                           {fileCount}
                         </td>
-                        <td>
+                        <td className="px-6 py-4">
                           <span
                             className="text-xs font-mono"
-                            style={{ color: '#a1a1a1' }}
+                            style={{ color: '#525252' }}
                             title={formatDate(s.created_at)}
                           >
                             {timeAgo(s.created_at)}
                           </span>
                         </td>
-                        <td>
+                        <td className="px-6 py-4 text-right">
                           <Link
                             href={`/${locale}/history`}
                             className="text-xs font-medium transition-colors"
                             style={{ color: '#91c5ff' }}
                           >
-                            Otvori
+                            Otvori →
                           </Link>
                         </td>
                       </tr>
