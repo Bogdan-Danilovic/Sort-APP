@@ -21,10 +21,10 @@ export default function SaveSessionModal({
   sourceCount,
 }: SaveSessionModalProps) {
   const t = useTranslations('merge.save');
-  const [name, setName] = useState('');
-  const [notes, setNotes] = useState('');
+  const [name, setName]     = useState('');
+  const [notes, setNotes]   = useState('');
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError]   = useState<string | null>(null);
 
   const handleSave = async () => {
     if (!name.trim()) return;
@@ -47,51 +47,63 @@ export default function SaveSessionModal({
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) handleSave();
   };
 
+  const inputStyle = {
+    background: '#060609',
+    border: '1px solid #141420',
+    color: '#fafafa',
+    borderRadius: 10,
+    padding: '10px 12px',
+    fontSize: 14,
+    width: '100%',
+    outline: 'none',
+    transition: 'border-color 150ms ease',
+  } as const;
+
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
             className="fixed inset-0 z-50"
-            style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(2px)' }}
+            style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)' }}
           />
 
-          {/* Modal */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: -20 }}
+            initial={{ opacity: 0, scale: 0.95, y: -16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: -20 }}
+            exit={{ opacity: 0, scale: 0.95, y: -16 }}
             transition={{ duration: 0.15 }}
             onKeyDown={handleKeyDown}
-            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md rounded-xl p-6"
+            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full rounded-2xl"
             style={{
-              background: 'var(--bg-2)',
-              border: '1px solid var(--border)',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+              maxWidth: 420,
+              background: '#0c0c12',
+              border: '1px solid #141420',
+              boxShadow: '0 24px 64px rgba(0,0,0,0.7)',
+              padding: '24px',
+              margin: '0 16px',
             }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between mb-5">
+            <div className="flex items-start justify-between mb-5">
               <div>
-                <h2
-                  className="font-semibold text-base"
-                  style={{ color: 'var(--text-1)' }}
-                >
+                <h2 className="font-semibold text-base" style={{ color: '#fafafa' }}>
                   {t('title')}
                 </h2>
-                <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>
+                <p className="text-xs mt-0.5" style={{ color: '#525252' }}>
                   {productCount} proizvoda · {sourceCount} izvora
                 </p>
               </div>
               <button
                 onClick={onClose}
-                className="p-1.5 rounded-md transition-colors"
-                style={{ color: 'var(--text-3)' }}
+                className="p-1.5 rounded-lg transition-colors flex-shrink-0"
+                style={{ color: '#525252' }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = '#a1a1a1'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = '#525252'; }}
               >
                 <X size={16} strokeWidth={2} />
               </button>
@@ -103,7 +115,7 @@ export default function SaveSessionModal({
                 <label
                   htmlFor="session-name"
                   className="block text-xs font-medium mb-1.5"
-                  style={{ color: 'var(--text-2)' }}
+                  style={{ color: '#a1a1a1' }}
                 >
                   {t('nameLabel')} *
                 </label>
@@ -114,18 +126,9 @@ export default function SaveSessionModal({
                   onChange={(e) => setName(e.target.value)}
                   placeholder={t('namePlaceholder')}
                   autoFocus
-                  className="w-full px-3 py-2 rounded-md text-sm focus:outline-none transition-colors"
-                  style={{
-                    background: 'var(--bg-1)',
-                    border: '1px solid var(--border)',
-                    color: 'var(--text-1)',
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = 'var(--accent)';
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = 'var(--border)';
-                  }}
+                  style={inputStyle}
+                  onFocus={(e) => { e.target.style.borderColor = 'rgba(58,129,246,0.4)'; }}
+                  onBlur={(e)  => { e.target.style.borderColor = '#141420'; }}
                 />
               </div>
 
@@ -133,7 +136,7 @@ export default function SaveSessionModal({
                 <label
                   htmlFor="session-notes"
                   className="block text-xs font-medium mb-1.5"
-                  style={{ color: 'var(--text-2)' }}
+                  style={{ color: '#a1a1a1' }}
                 >
                   {t('notesLabel')}
                 </label>
@@ -143,25 +146,22 @@ export default function SaveSessionModal({
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder={t('notesPlaceholder')}
                   rows={3}
-                  className="w-full px-3 py-2 rounded-md text-sm focus:outline-none transition-colors resize-none"
-                  style={{
-                    background: 'var(--bg-1)',
-                    border: '1px solid var(--border)',
-                    color: 'var(--text-1)',
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = 'var(--accent)';
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = 'var(--border)';
-                  }}
+                  className="resize-none focus:outline-none transition-colors"
+                  style={{ ...inputStyle, padding: '10px 12px' }}
+                  onFocus={(e) => { e.target.style.borderColor = 'rgba(58,129,246,0.4)'; }}
+                  onBlur={(e)  => { e.target.style.borderColor = '#141420'; }}
                 />
               </div>
 
               {error && (
-                <p className="text-xs" style={{ color: '#fca5a5' }}>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-xs px-3 py-2 rounded-lg"
+                  style={{ background: 'rgba(239,68,68,0.08)', color: '#fca5a5', border: '1px solid rgba(239,68,68,0.2)' }}
+                >
                   {error}
-                </p>
+                </motion.p>
               )}
             </div>
 
@@ -170,31 +170,24 @@ export default function SaveSessionModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-sm rounded-md transition-colors"
-                style={{
-                  color: 'var(--text-2)',
-                  background: 'var(--bg-3)',
-                }}
+                className="px-4 py-2 text-sm rounded-xl transition-colors"
+                style={{ color: '#a1a1a1', background: '#141420' }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = '#1a1a28'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = '#141420'; }}
               >
                 {t('cancel')}
               </button>
-              <button
+              <motion.button
                 type="button"
                 onClick={handleSave}
                 disabled={!name.trim() || saving}
-                className="px-4 py-2 text-sm rounded-md font-medium transition-colors flex items-center gap-2 disabled:opacity-40"
-                style={{
-                  background: 'var(--accent)',
-                  color: 'white',
-                }}
+                whileTap={{ scale: 0.97 }}
+                className="px-5 py-2 text-sm rounded-xl font-semibold flex items-center gap-2 disabled:opacity-40"
+                style={{ background: 'linear-gradient(135deg, #2563ef, #3a81f6)', color: 'white' }}
               >
-                {saving ? (
-                  <Loader2 size={14} className="animate-spin" />
-                ) : (
-                  <Save size={14} strokeWidth={2} />
-                )}
+                {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} strokeWidth={2} />}
                 {saving ? 'Čuvanje...' : t('save')}
-              </button>
+              </motion.button>
             </div>
           </motion.div>
         </>

@@ -15,12 +15,9 @@ export default function PasteTextArea({ onPaste, isDisabled }: PasteTextAreaProp
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setValue(e.target.value);
-    },
-    []
-  );
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setValue(e.target.value);
+  }, []);
 
   const handleSubmit = useCallback(() => {
     const trimmed = value.trim();
@@ -32,7 +29,6 @@ export default function PasteTextArea({ onPaste, isDisabled }: PasteTextAreaProp
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      // Ctrl+Enter za submit
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
         e.preventDefault();
         handleSubmit();
@@ -47,14 +43,10 @@ export default function PasteTextArea({ onPaste, isDisabled }: PasteTextAreaProp
         type="button"
         onClick={() => setOpen((prev) => !prev)}
         className="flex items-center gap-1.5 text-xs font-medium transition-colors"
-        style={{ color: 'var(--text-3)' }}
+        style={{ color: open ? '#a1a1a1' : '#525252' }}
         disabled={isDisabled}
       >
-        {open ? (
-          <ChevronDown size={13} strokeWidth={2} />
-        ) : (
-          <ChevronRight size={13} strokeWidth={2} />
-        )}
+        {open ? <ChevronDown size={13} strokeWidth={2} /> : <ChevronRight size={13} strokeWidth={2} />}
         {t('paste')}
       </button>
 
@@ -74,33 +66,30 @@ export default function PasteTextArea({ onPaste, isDisabled }: PasteTextAreaProp
                 onKeyDown={handleKeyDown}
                 placeholder={t('pasteHint')}
                 rows={5}
-                className="w-full rounded-lg px-3 py-2.5 text-sm resize-y font-mono focus:outline-none transition-colors"
+                className="w-full rounded-xl px-3 py-2.5 text-sm resize-y font-mono focus:outline-none transition-colors"
                 style={{
-                  background: 'var(--bg-2)',
-                  border: '1px solid var(--border)',
-                  color: 'var(--text-1)',
-                  caretColor: 'var(--accent)',
+                  background: '#0c0c12',
+                  border: '1px solid #141420',
+                  color: '#fafafa',
+                  caretColor: '#3a81f6',
                 }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = 'var(--accent)';
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = 'var(--border)';
-                }}
+                onFocus={(e) => { e.target.style.borderColor = 'rgba(58,129,246,0.4)'; }}
+                onBlur={(e)  => { e.target.style.borderColor = '#141420'; }}
                 disabled={isDisabled}
               />
               <div className="flex items-center justify-between">
-                <p className="text-2xs" style={{ color: 'var(--text-3)' }}>
+                <p className="text-2xs" style={{ color: '#525252' }}>
                   Ctrl+Enter za dodavanje
                 </p>
                 <button
                   type="button"
                   onClick={handleSubmit}
                   disabled={!value.trim() || isDisabled}
-                  className="px-3 py-1.5 text-xs font-medium rounded-md transition-colors disabled:opacity-40"
+                  className="px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors disabled:opacity-40"
                   style={{
-                    background: 'rgba(99, 102, 241, 0.15)',
-                    color: '#818cf8',
+                    background: 'rgba(58,129,246,0.1)',
+                    color: '#91c5ff',
+                    border: '1px solid rgba(58,129,246,0.2)',
                   }}
                 >
                   Dodaj tekst

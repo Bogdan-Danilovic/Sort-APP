@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
-import { AnimatePresence as AP } from 'framer-motion';
 
 import FileUploadZone from '@/components/merge/FileUploadZone';
 import FileChip from '@/components/merge/FileChip';
@@ -17,16 +16,8 @@ import SaveSessionModal from '@/components/merge/SaveSessionModal';
 
 import { useMergeSession } from '@/lib/hooks/useMergeSession';
 import { createClient } from '@/lib/supabase';
-import type { MergedProduct } from '@/types';
 
-import {
-  ArrowRight,
-  ArrowLeft,
-  RotateCcw,
-  Undo2,
-  Search,
-  X,
-} from 'lucide-react';
+import { ArrowRight, ArrowLeft, RotateCcw, Undo2, Search, X } from 'lucide-react';
 import MergeKitLogo from '@/components/ui/MergeKitLogo';
 
 interface MergePageClientProps {
@@ -35,25 +26,26 @@ interface MergePageClientProps {
   companyName?: string;
 }
 
-export default function MergePageClient({
-  locale,
-  userId,
-  companyName,
-}: MergePageClientProps) {
+const BG1 = '#0c0c12';
+const BG2 = '#141420';
+const T1  = '#fafafa';
+const T2  = '#a1a1a1';
+const T3  = '#525252';
+const ACCENT_GRAD = 'linear-gradient(135deg, #2563ef, #3a81f6)';
+
+export default function MergePageClient({ locale, userId, companyName }: MergePageClientProps) {
   const t = useTranslations();
-  const router = useRouter();
   const supabase = createClient();
 
   const [saveModalOpen, setSaveModalOpen] = useState(false);
-  const [confirmReset, setConfirmReset] = useState(false);
+  const [confirmReset, setConfirmReset]   = useState(false);
+  const [bulkPrice, setBulkPrice]         = useState('');
 
   const session = useMergeSession();
 
   const hasInput =
     session.uploadedFiles.some((f) => !f.isLoading && !f.error) ||
     session.pasteInputs.length > 0;
-
-  // ── Save session ────────────────────────────────────────
 
   const handleSave = async (name: string, notes: string) => {
     const sourceFiles = session.parsedFiles.map((pf) => ({
@@ -62,7 +54,6 @@ export default function MergePageClient({
       uploadedAt: new Date().toISOString(),
       rowCount: pf.parsedCount,
     }));
-
     const { error } = await supabase.from('merge_sessions').insert({
       user_id: userId,
       session_name: name,
@@ -70,26 +61,29 @@ export default function MergePageClient({
       merged_result: session.mergedProducts as unknown as import('@/types/supabase').Json,
       notes: notes || null,
     });
-
     if (error) throw error;
   };
-
-  // ── Apply price to all empty ────────────────────────────
-
-  const [bulkPrice, setBulkPrice] = useState('');
 
   const handleApplyToAll = () => {
     const num = parseFloat(bulkPrice);
     if (isNaN(num) || num <= 0) return;
-    const count = session.applyPriceToAll(num);
+    session.applyPriceToAll(num);
     setBulkPrice('');
   };
 
+  const inputBase = {
+    background: BG1,
+    border: `1px solid ${BG2}`,
+    color: T1,
+    height: 40,
+  } as const;
+
   return (
-    <div className="max-w-6xl mx-auto">
-      {/* Header: logo u centru, step indicator desno */}
+    <div style={{ maxWidth: 900, margin: '0 auto' }}>
+
+      {/* ── Header ── */}
       <div
-        className="items-center mb-8"
+        className="items-center mb-6 sm:mb-8"
         style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr' }}
       >
         <div />
@@ -99,9 +93,11 @@ export default function MergePageClient({
         </div>
       </div>
 
-      {/* Steps */}
       <AnimatePresence mode="wait">
-        {/* ── Step 1: Upload ─────────────────────────────── */}
+
+        {/* ══════════════════════════════════════════
+            STEP 1 — Upload
+        ══════════════════════════════════════════ */}
         {session.step === 1 && (
           <motion.div
             key="step1"
@@ -111,21 +107,14 @@ export default function MergePageClient({
             transition={{ duration: 0.2 }}
             className="space-y-4"
           >
-            <FileUploadZone
-              onFilesAdded={session.addFiles}
-              isLoading={session.isLoading}
-            />
+            <FileUploadZone onFilesAdded={session.addFiles} isLoading={session.isLoading} />
 
             {/* File chips */}
             {session.uploadedFiles.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 <AnimatePresence>
                   {session.uploadedFiles.map((uf) => (
-                    <FileChip
-                      key={uf.id}
-                      file={uf}
-                      onRemove={session.removeFile}
-                    />
+                    <FileChip key={uf.id} file={uf} onRemove={session.removeFile} />
                   ))}
                 </AnimatePresence>
               </div>
@@ -137,18 +126,18 @@ export default function MergePageClient({
                 {session.pasteInputs.map((pi) => (
                   <div
                     key={pi.id}
-                    className="file-chip"
-                    style={{ maxWidth: 280 }}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs"
+                    style={{ background: BG1, border: `1px solid ${BG2}`, maxWidth: 280 }}
                   >
-                    <span
-                      className="truncate text-xs"
-                      style={{ color: 'var(--text-2)' }}
-                    >
+                    <span className="truncate" style={{ color: T2 }}>
                       Tekst · {pi.parsed?.parsedCount ?? 0} redova
                     </span>
                     <button
                       onClick={() => session.removePaste(pi.id)}
-                      className="chip-remove"
+                      className="flex-shrink-0 transition-colors"
+                      style={{ color: T3 }}
+                      onMouseEnter={(e) => { e.currentTarget.style.color = T2; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.color = T3; }}
                     >
                       <X size={12} />
                     </button>
@@ -157,28 +146,28 @@ export default function MergePageClient({
               </div>
             )}
 
-            <PasteTextArea
-              onPaste={session.addPaste}
-              isDisabled={session.isLoading}
-            />
+            <PasteTextArea onPaste={session.addPaste} isDisabled={session.isLoading} />
 
-            {/* Actions */}
-            <div className="flex justify-end pt-2">
-              <button
+            {/* Parse CTA — full width on mobile */}
+            <div className="flex pt-2">
+              <motion.button
                 type="button"
                 onClick={session.goNext}
                 disabled={!hasInput || session.isLoading}
-                className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-40"
-                style={{ background: 'var(--accent)', color: 'white' }}
+                whileTap={{ scale: 0.98 }}
+                className="flex-1 sm:flex-none sm:ml-auto flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold disabled:opacity-40"
+                style={{ background: ACCENT_GRAD, color: '#ffffff' }}
               >
                 {t('merge.upload.parse')}
                 <ArrowRight size={15} strokeWidth={2} />
-              </button>
+              </motion.button>
             </div>
           </motion.div>
         )}
 
-        {/* ── Step 2: Preview ────────────────────────────── */}
+        {/* ══════════════════════════════════════════
+            STEP 2 — Parsed Preview
+        ══════════════════════════════════════════ */}
         {session.step === 2 && (
           <motion.div
             key="step2"
@@ -194,35 +183,36 @@ export default function MergePageClient({
               onRemoveSource={session.removeSource}
             />
 
-            <div className="flex items-center justify-between pt-2">
-              <button
+            <div className="flex items-center gap-3 pt-2">
+              <motion.button
                 type="button"
                 onClick={session.goBack}
-                className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                style={{
-                  color: 'var(--text-2)',
-                  background: 'var(--bg-3)',
-                }}
+                whileTap={{ scale: 0.98 }}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium"
+                style={{ color: T2, background: BG1, border: `1px solid ${BG2}` }}
               >
                 <ArrowLeft size={15} strokeWidth={2} />
                 {t('common.back')}
-              </button>
+              </motion.button>
 
-              <button
+              <motion.button
                 type="button"
                 onClick={session.goNext}
                 disabled={session.parsedFiles.length === 0}
-                className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-40"
-                style={{ background: 'var(--accent)', color: 'white' }}
+                whileTap={{ scale: 0.98 }}
+                className="ml-auto flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold disabled:opacity-40"
+                style={{ background: ACCENT_GRAD, color: '#ffffff' }}
               >
                 {t('merge.preview.mergeAll')}
                 <ArrowRight size={15} strokeWidth={2} />
-              </button>
+              </motion.button>
             </div>
           </motion.div>
         )}
 
-        {/* ── Step 3: Result ─────────────────────────────── */}
+        {/* ══════════════════════════════════════════
+            STEP 3 — Merged Result
+        ══════════════════════════════════════════ */}
         {session.step === 3 && (
           <motion.div
             key="step3"
@@ -232,98 +222,77 @@ export default function MergePageClient({
             transition={{ duration: 0.2 }}
             className="space-y-4"
           >
-            {/* Toolbar */}
-            <div className="flex items-center gap-3 flex-wrap">
-              {/* Search */}
-              <div className="relative flex-1 min-w-48 max-w-72">
+            {/* Toolbar — stacked on mobile, row on desktop */}
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+
+              {/* Search — always full width on mobile */}
+              <div className="relative w-full sm:flex-1 sm:min-w-[180px] sm:max-w-xs">
                 <Search
                   size={14}
-                  className="absolute left-3 top-1/2 -translate-y-1/2"
-                  style={{ color: 'var(--text-3)' }}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                  style={{ color: T3 }}
                 />
                 <input
                   type="text"
                   value={session.filterConfig.searchTerm}
-                  onChange={(e) =>
-                    session.setFilterConfig({ searchTerm: e.target.value })
-                  }
+                  onChange={(e) => session.setFilterConfig({ searchTerm: e.target.value })}
                   placeholder={t('merge.result.searchPlaceholder')}
-                  className="w-full pl-9 pr-3 py-1.5 rounded-md text-sm focus:outline-none transition-colors"
-                  style={{
-                    background: 'var(--bg-2)',
-                    border: '1px solid var(--border)',
-                    color: 'var(--text-1)',
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = 'var(--accent)';
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = 'var(--border)';
-                  }}
+                  className="w-full pl-9 pr-8 rounded-xl text-sm focus:outline-none transition-colors"
+                  style={{ ...inputBase, paddingLeft: 36, paddingRight: 28 }}
+                  onFocus={(e) => { e.target.style.borderColor = 'rgba(58,129,246,0.45)'; }}
+                  onBlur={(e)  => { e.target.style.borderColor = BG2; }}
                 />
                 {session.filterConfig.searchTerm && (
                   <button
                     onClick={() => session.setFilterConfig({ searchTerm: '' })}
                     className="absolute right-2 top-1/2 -translate-y-1/2"
-                    style={{ color: 'var(--text-3)' }}
+                    style={{ color: T3 }}
                   >
                     <X size={13} strokeWidth={2} />
                   </button>
                 )}
               </div>
 
-              {/* Bulk price */}
-              <div className="flex items-center gap-1.5">
+              {/* Bulk price row */}
+              <div className="flex items-center gap-2">
                 <input
                   type="number"
                   value={bulkPrice}
                   onChange={(e) => setBulkPrice(e.target.value)}
                   placeholder="Popuni prazne..."
-                  className="px-2.5 py-1.5 rounded-md text-sm w-36 focus:outline-none"
-                  style={{
-                    background: 'var(--bg-2)',
-                    border: '1px solid var(--border)',
-                    color: 'var(--text-1)',
-                    fontFamily: 'JetBrains Mono, monospace',
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = 'var(--accent)';
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = 'var(--border)';
-                  }}
+                  className="flex-1 sm:flex-none sm:w-36 px-3 rounded-xl text-sm focus:outline-none transition-colors"
+                  style={{ ...inputBase, fontFamily: 'JetBrains Mono, monospace' }}
+                  onFocus={(e) => { e.target.style.borderColor = 'rgba(58,129,246,0.45)'; }}
+                  onBlur={(e)  => { e.target.style.borderColor = BG2; }}
                 />
                 <button
                   type="button"
                   onClick={handleApplyToAll}
                   disabled={!bulkPrice}
-                  className="px-3 py-1.5 text-xs font-medium rounded-md transition-colors disabled:opacity-40"
+                  className="flex-shrink-0 px-3 text-xs font-semibold rounded-xl disabled:opacity-40 transition-colors"
                   style={{
-                    background: 'rgba(245, 158, 11, 0.12)',
+                    background: 'rgba(245,158,11,0.1)',
                     color: '#fcd34d',
+                    border: '1px solid rgba(245,158,11,0.2)',
+                    height: 40,
                   }}
                 >
                   {t('merge.result.applyPriceToAll')}
                 </button>
+
+                {session.canUndo && (
+                  <button
+                    type="button"
+                    className="flex items-center gap-1.5 px-3 text-xs font-medium rounded-xl flex-shrink-0 transition-colors"
+                    style={{ background: BG1, color: T2, border: `1px solid ${BG2}`, height: 40 }}
+                    title={t('common.undoPrice')}
+                  >
+                    <Undo2 size={13} strokeWidth={2} />
+                    <span className="hidden sm:inline">{t('common.undo')}</span>
+                    <span className="opacity-60 text-[10px]">({session.undoStackSize})</span>
+                  </button>
+                )}
               </div>
-
-              {/* Undo */}
-              {session.canUndo && (
-                <button
-                  type="button"
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors"
-                  style={{
-                    background: 'var(--bg-3)',
-                    color: 'var(--text-2)',
-                  }}
-                  title={t('common.undoPrice')}
-                >
-                  <Undo2 size={12} strokeWidth={2} />
-                  {t('common.undo')} ({session.undoStackSize})
-                </button>
-              )}
-
-              <div className="flex-1" />
             </div>
 
             {/* Table */}
@@ -338,19 +307,19 @@ export default function MergePageClient({
             />
 
             {/* Bottom actions */}
-            <div className="flex items-center justify-between pt-2">
+            <div className="flex items-center justify-between pt-1">
               <button
                 type="button"
                 onClick={() => setConfirmReset(true)}
-                className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                style={{ color: 'var(--text-3)', background: 'var(--bg-2)' }}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors"
+                style={{ color: T3, background: BG1, border: `1px solid ${BG2}` }}
               >
                 <RotateCcw size={14} strokeWidth={2} />
                 {t('merge.result.startOver')}
               </button>
             </div>
 
-            {/* Sticky export bar */}
+            {/* Export bar */}
             <ExportBar
               products={session.filteredProducts}
               totals={session.grandTotals}
@@ -359,38 +328,41 @@ export default function MergePageClient({
             />
 
             {/* Confirm reset */}
-            {confirmReset && (
-              <div
-                className="p-4 rounded-lg flex items-center justify-between"
-                style={{
-                  background: 'rgba(239, 68, 68, 0.08)',
-                  border: '1px solid rgba(239, 68, 68, 0.2)',
-                }}
-              >
-                <p className="text-sm" style={{ color: '#fca5a5' }}>
-                  {t('merge.result.startOverConfirm')}
-                </p>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setConfirmReset(false)}
-                    className="px-3 py-1.5 text-xs rounded-md"
-                    style={{ background: 'var(--bg-3)', color: 'var(--text-2)' }}
-                  >
-                    {t('common.cancel')}
-                  </button>
-                  <button
-                    onClick={() => {
-                      session.reset();
-                      setConfirmReset(false);
-                    }}
-                    className="px-3 py-1.5 text-xs rounded-md font-medium"
-                    style={{ background: '#ef4444', color: 'white' }}
-                  >
-                    {t('merge.result.startOver')}
-                  </button>
-                </div>
-              </div>
-            )}
+            <AnimatePresence>
+              {confirmReset && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.15 }}
+                  className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-xl"
+                  style={{
+                    background: 'rgba(239,68,68,0.06)',
+                    border: '1px solid rgba(239,68,68,0.2)',
+                  }}
+                >
+                  <p className="text-sm flex-1" style={{ color: '#fca5a5' }}>
+                    {t('merge.result.startOverConfirm')}
+                  </p>
+                  <div className="flex gap-2 flex-shrink-0">
+                    <button
+                      onClick={() => setConfirmReset(false)}
+                      className="px-3 py-1.5 text-xs rounded-lg"
+                      style={{ background: BG1, color: T2, border: `1px solid ${BG2}` }}
+                    >
+                      {t('common.cancel')}
+                    </button>
+                    <button
+                      onClick={() => { session.reset(); setConfirmReset(false); }}
+                      className="px-3 py-1.5 text-xs rounded-lg font-semibold"
+                      style={{ background: '#ef4444', color: 'white' }}
+                    >
+                      {t('merge.result.startOver')}
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>

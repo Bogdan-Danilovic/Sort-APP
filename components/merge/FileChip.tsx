@@ -20,7 +20,7 @@ function getFileIconColor(filename: string): string {
   const ext = filename.split('.').pop()?.toLowerCase();
   if (ext === 'csv') return '#10b981';
   if (ext === 'xlsx' || ext === 'xls') return '#3b82f6';
-  return 'var(--text-3)';
+  return '#525252';
 }
 
 export default function FileChip({ file, onRemove }: FileChipProps) {
@@ -39,7 +39,7 @@ export default function FileChip({ file, onRemove }: FileChipProps) {
     >
       {/* Icon */}
       {file.isLoading ? (
-        <Loader2 size={14} className="animate-spin" style={{ color: 'var(--text-3)' }} />
+        <Loader2 size={14} className="animate-spin" style={{ color: '#525252' }} />
       ) : file.error ? (
         <AlertCircle size={14} style={{ color: '#ef4444' }} />
       ) : (
@@ -49,7 +49,7 @@ export default function FileChip({ file, onRemove }: FileChipProps) {
       {/* Filename */}
       <span
         className="max-w-[160px] truncate font-medium"
-        style={{ color: file.error ? '#fca5a5' : 'var(--text-1)' }}
+        style={{ color: file.error ? '#fca5a5' : '#fafafa' }}
         title={file.file.name}
       >
         {file.file.name}
@@ -59,10 +59,7 @@ export default function FileChip({ file, onRemove }: FileChipProps) {
       {!file.isLoading && !file.error && (
         <span
           className="text-2xs font-mono px-1.5 py-0.5 rounded"
-          style={{
-            background: 'var(--bg-3)',
-            color: 'var(--text-3)',
-          }}
+          style={{ background: '#141420', color: '#525252' }}
         >
           {rowCount} {t('files.rows')}
         </span>
