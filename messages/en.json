@@ -1,0 +1,254 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "merge": "New Merge",
+    "history": "History",
+    "settings": "Settings",
+    "logout": "Log out",
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar"
+  },
+  "auth": {
+    "login": "Sign in",
+    "register": "Create account",
+    "email": "Email address",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "loginWithGoogle": "Sign in with Google",
+    "registerWithGoogle": "Sign up with Google",
+    "errors": {
+      "invalidEmail": "Please enter a valid email address",
+      "shortPassword": "Password must be at least 8 characters",
+      "passwordMismatch": "Passwords do not match",
+      "emailInUse": "This email address is already in use",
+      "invalidCredentials": "Invalid email or password",
+      "generic": "An error occurred. Please try again."
+    },
+    "success": {
+      "registered": "Account created! Check your email for confirmation.",
+      "loggedOut": "You have been logged out."
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome to MergeKit",
+    "stats": {
+      "totalSessions": "Total merges",
+      "lastMerge": "Last merge",
+      "totalProducts": "Total products",
+      "never": "Never"
+    },
+    "recentSessions": "Recent sessions",
+    "noSessions": {
+      "title": "No saved sessions yet",
+      "description": "Start your first inventory merge.",
+      "action": "Create your first merge"
+    },
+    "quickActions": "Quick actions",
+    "newMerge": "New merge",
+    "viewHistory": "View history"
+  },
+  "merge": {
+    "title": "New Merge",
+    "steps": {
+      "upload": "Upload",
+      "preview": "Preview",
+      "result": "Result"
+    },
+    "upload": {
+      "title": "Upload files",
+      "dropzone": "Drop files here",
+      "dropzoneActive": "Release to upload",
+      "dropzoneHint": "Supported formats: CSV, TXT, XLSX",
+      "browse": "or browse files",
+      "paste": "Or paste text directly",
+      "pasteHint": "WhatsApp, SMS, free text...",
+      "pasteDetected": "Format detected:",
+      "parse": "Parse & Preview",
+      "parseHint": "Add at least one file or text",
+      "files": {
+        "rows": "rows",
+        "remove": "Remove"
+      }
+    },
+    "preview": {
+      "title": "Preview by source",
+      "source": "Source",
+      "parsedRows": "parsed rows",
+      "skipped": "skipped",
+      "suspect": "Suspicious row",
+      "columns": {
+        "name": "Name",
+        "quantity": "Quantity",
+        "unit": "Unit",
+        "price": "Price",
+        "description": "Description"
+      },
+      "mergeAll": "Merge All →",
+      "editSource": "Edit",
+      "removeSource": "Remove source"
+    },
+    "result": {
+      "title": "Merge Result",
+      "searchPlaceholder": "Filter by name...",
+      "export": "Export",
+      "saveSession": "Save session",
+      "startOver": "Start over",
+      "startOverConfirm": "All unsaved data will be lost. Continue?",
+      "columns": {
+        "name": "Product Name",
+        "quantities": "Quantities",
+        "totalQty": "Total Qty",
+        "prices": "Prices",
+        "avgPrice": "Avg Price",
+        "totalValue": "Total Value",
+        "description": "Description",
+        "sources": "Sources"
+      },
+      "totals": "TOTALS",
+      "applyPriceToAll": "Fill all empty",
+      "applyPriceHint": "Enter a price and apply to all products without a price",
+      "noResults": "No products matching search",
+      "noResultsHint": "Try a different search term"
+    },
+    "save": {
+      "title": "Save session",
+      "nameLabel": "Session name",
+      "namePlaceholder": "e.g. Warehouse January 2025",
+      "notesLabel": "Notes (optional)",
+      "notesPlaceholder": "Add a note about this session...",
+      "save": "Save",
+      "cancel": "Cancel",
+      "success": "Session saved successfully",
+      "error": "Error saving session"
+    },
+    "export": {
+      "csv": "Export as CSV",
+      "excel": "Export as Excel",
+      "pdf": "Export as PDF",
+      "exporting": "Generating file...",
+      "success": "File downloaded successfully",
+      "error": "Error during export"
+    }
+  },
+  "history": {
+    "title": "Merge History",
+    "searchPlaceholder": "Search sessions...",
+    "columns": {
+      "date": "Date",
+      "name": "Name",
+      "products": "Products",
+      "sources": "Files",
+      "actions": "Actions"
+    },
+    "load": "Load",
+    "delete": "Delete",
+    "deleteSelected": "Delete selected",
+    "deleteConfirm": "This action is irreversible. Delete this session?",
+    "deleteMultipleConfirm": "This action is irreversible. Delete {count} sessions?",
+    "deleteSuccess": "Session deleted successfully",
+    "deleteError": "Error deleting session",
+    "loadSuccess": "Session loaded",
+    "noSessions": {
+      "title": "No saved sessions",
+      "description": "Your merge history will appear here after you save your first session.",
+      "action": "Create a new merge"
+    },
+    "noResults": "No sessions matching \"{term}\""
+  },
+  "settings": {
+    "title": "Settings",
+    "company": {
+      "title": "Company info",
+      "name": "Company name",
+      "namePlaceholder": "e.g. Acme Corp",
+      "nameHint": "Used in the PDF report header",
+      "currency": "Default currency",
+      "currencies": {
+        "din": "Dinar (din)",
+        "eur": "Euro (€)",
+        "usd": "Dollar ($)"
+      }
+    },
+    "preferences": {
+      "title": "Preferences",
+      "language": "Language",
+      "languages": {
+        "sr": "Srpski",
+        "en": "English"
+      },
+      "theme": "Theme",
+      "themes": {
+        "dark": "Dark",
+        "light": "Light",
+        "system": "System"
+      }
+    },
+    "danger": {
+      "title": "Danger zone",
+      "clearHistory": "Clear all history",
+      "clearHistoryDescription": "Permanently delete all saved merge sessions",
+      "clearHistoryConfirm": "This action is irreversible. Delete all history?",
+      "deleteAccount": "Delete account",
+      "deleteAccountDescription": "Permanently delete your account and all data",
+      "deleteAccountConfirm": "This action is IRREVERSIBLE. All your data will be permanently deleted. Continue?",
+      "clearHistorySuccess": "History cleared",
+      "deleteAccountSuccess": "Account deleted"
+    },
+    "save": "Save settings",
+    "saveSuccess": "Settings saved",
+    "saveError": "Error saving settings"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Try again",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "close": "Close",
+    "search": "Search",
+    "clear": "Clear",
+    "noData": "No data",
+    "selectAll": "Select all",
+    "deselectAll": "Deselect all",
+    "copied": "Copied!",
+    "products": "products",
+    "files": "files",
+    "rows": "rows",
+    "currency": {
+      "din": "din",
+      "eur": "€",
+      "usd": "$"
+    },
+    "undo": "Undo",
+    "undoPrice": "Undo price change",
+    "sortAsc": "Sort ascending",
+    "sortDesc": "Sort descending"
+  },
+  "errors": {
+    "parseFailed": "Parsing failed",
+    "noValidRows": "No valid rows found in file",
+    "fileTooBig": "File is too large (max 10MB)",
+    "unsupportedFormat": "Unsupported file format",
+    "networkError": "Network error. Check your internet connection.",
+    "unauthorized": "You are not logged in",
+    "notFound": "Page not found",
+    "generic": "An unexpected error occurred"
+  },
+  "toast": {
+    "sessionSaved": "Session saved",
+    "sessionLoaded": "Session loaded",
+    "exportDone": "File downloaded",
+    "priceSaved": "Price updated",
+    "priceUndo": "Price change undone",
+    "allPricesFilled": "Price applied to {count} products"
+  }
+}

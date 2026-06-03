@@ -1,0 +1,254 @@
+{
+  "nav": {
+    "dashboard": "Kontrolna tabla",
+    "merge": "Novo spajanje",
+    "history": "Istorija",
+    "settings": "Podešavanja",
+    "logout": "Odjavi se",
+    "collapse": "Smanji bočnu traku",
+    "expand": "Proširi bočnu traku"
+  },
+  "auth": {
+    "login": "Prijavite se",
+    "register": "Registrujte se",
+    "email": "Email adresa",
+    "password": "Lozinka",
+    "confirmPassword": "Potvrdite lozinku",
+    "forgotPassword": "Zaboravili ste lozinku?",
+    "noAccount": "Nemate nalog?",
+    "hasAccount": "Već imate nalog?",
+    "loginWithGoogle": "Prijavite se sa Google-om",
+    "registerWithGoogle": "Registrujte se sa Google-om",
+    "errors": {
+      "invalidEmail": "Unesite ispravnu email adresu",
+      "shortPassword": "Lozinka mora imati najmanje 8 karaktera",
+      "passwordMismatch": "Lozinke se ne podudaraju",
+      "emailInUse": "Email adresa je već u upotrebi",
+      "invalidCredentials": "Pogrešan email ili lozinka",
+      "generic": "Došlo je do greške. Pokušajte ponovo."
+    },
+    "success": {
+      "registered": "Nalog je uspešno kreiran! Proverite email za potvrdu.",
+      "loggedOut": "Uspešno ste se odjavili."
+    }
+  },
+  "dashboard": {
+    "title": "Kontrolna tabla",
+    "welcome": "Dobrodošli u MergeKit",
+    "stats": {
+      "totalSessions": "Ukupno spajanja",
+      "lastMerge": "Poslednje spajanje",
+      "totalProducts": "Ukupno proizvoda",
+      "never": "Nikad"
+    },
+    "recentSessions": "Poslednja spajanja",
+    "noSessions": {
+      "title": "Još uvek nema sačuvanih spajanja",
+      "description": "Počnite sa prvim spajanjem inventara.",
+      "action": "Kreirajte prvo spajanje"
+    },
+    "quickActions": "Brze akcije",
+    "newMerge": "Novo spajanje",
+    "viewHistory": "Pogledajte istoriju"
+  },
+  "merge": {
+    "title": "Novo spajanje",
+    "steps": {
+      "upload": "Učitavanje",
+      "preview": "Pregled",
+      "result": "Rezultat"
+    },
+    "upload": {
+      "title": "Učitajte fajlove",
+      "dropzone": "Prevucite fajlove ovde",
+      "dropzoneActive": "Otpustite fajlove",
+      "dropzoneHint": "Podržani formati: CSV, TXT, XLSX",
+      "browse": "ili izaberite fajlove",
+      "paste": "Ili nalepite tekst direktno",
+      "pasteHint": "WhatsApp, SMS, slobodan tekst...",
+      "pasteDetected": "Format detektovan:",
+      "parse": "Parsiraj i pregledaj",
+      "parseHint": "Dodajte najmanje jedan fajl ili tekst",
+      "files": {
+        "rows": "redova",
+        "remove": "Ukloni"
+      }
+    },
+    "preview": {
+      "title": "Pregled po izvorima",
+      "source": "Izvor",
+      "parsedRows": "parsovanih redova",
+      "skipped": "preskočenih",
+      "suspect": "Sumnjivi red",
+      "columns": {
+        "name": "Naziv",
+        "quantity": "Količina",
+        "unit": "Jed.",
+        "price": "Cena",
+        "description": "Opis"
+      },
+      "mergeAll": "Spoji sve →",
+      "editSource": "Uredi",
+      "removeSource": "Ukloni izvor"
+    },
+    "result": {
+      "title": "Rezultat spajanja",
+      "searchPlaceholder": "Filtriraj po nazivu...",
+      "export": "Izvezi",
+      "saveSession": "Sačuvaj sesiju",
+      "startOver": "Počni iznova",
+      "startOverConfirm": "Svi neparsovani podaci će biti izgubljeni. Nastaviti?",
+      "columns": {
+        "name": "Naziv proizvoda",
+        "quantities": "Količine",
+        "totalQty": "Uk. kol.",
+        "prices": "Cene",
+        "avgPrice": "Avg cena",
+        "totalValue": "Uk. vrednost",
+        "description": "Opis",
+        "sources": "Izvori"
+      },
+      "totals": "UKUPNO",
+      "applyPriceToAll": "Popuni sve prazne",
+      "applyPriceHint": "Unesi cenu i primeni na sve proizvode bez cene",
+      "noResults": "Nema proizvoda koji odgovaraju pretrazi",
+      "noResultsHint": "Pokušajte sa drugim terminom"
+    },
+    "save": {
+      "title": "Sačuvaj sesiju",
+      "nameLabel": "Naziv sesije",
+      "namePlaceholder": "npr. Magacin januar 2025",
+      "notesLabel": "Napomene (opciono)",
+      "notesPlaceholder": "Dodajte belešku o ovoj sesiji...",
+      "save": "Sačuvaj",
+      "cancel": "Otkaži",
+      "success": "Sesija je uspešno sačuvana",
+      "error": "Greška pri čuvanju sesije"
+    },
+    "export": {
+      "csv": "Izvezi kao CSV",
+      "excel": "Izvezi kao Excel",
+      "pdf": "Izvezi kao PDF",
+      "exporting": "Generisanje fajla...",
+      "success": "Fajl je uspešno preuzet",
+      "error": "Greška pri izvozu"
+    }
+  },
+  "history": {
+    "title": "Istorija spajanja",
+    "searchPlaceholder": "Pretraži sesije...",
+    "columns": {
+      "date": "Datum",
+      "name": "Naziv",
+      "products": "Proizvodi",
+      "sources": "Fajlovi",
+      "actions": "Akcije"
+    },
+    "load": "Učitaj",
+    "delete": "Obriši",
+    "deleteSelected": "Obriši izabrane",
+    "deleteConfirm": "Ova akcija je nepovratna. Obrisati izabranu sesiju?",
+    "deleteMultipleConfirm": "Ova akcija je nepovratna. Obrisati {count} sesija?",
+    "deleteSuccess": "Sesija je uspešno obrisana",
+    "deleteError": "Greška pri brisanju",
+    "loadSuccess": "Sesija je učitana",
+    "noSessions": {
+      "title": "Nema sačuvanih sesija",
+      "description": "Vaša istorija spajanja će se prikazati ovde kada sačuvate prvu sesiju.",
+      "action": "Kreirajte novo spajanje"
+    },
+    "noResults": "Nema sesija koje odgovaraju pretrazi \"{term}\""
+  },
+  "settings": {
+    "title": "Podešavanja",
+    "company": {
+      "title": "Podaci o firmi",
+      "name": "Naziv firme",
+      "namePlaceholder": "npr. Firma d.o.o.",
+      "nameHint": "Koristiće se u zaglavlju PDF izveštaja",
+      "currency": "Podrazumevana valuta",
+      "currencies": {
+        "din": "Dinar (din)",
+        "eur": "Evro (€)",
+        "usd": "Dolar ($)"
+      }
+    },
+    "preferences": {
+      "title": "Preference",
+      "language": "Jezik",
+      "languages": {
+        "sr": "Srpski",
+        "en": "English"
+      },
+      "theme": "Tema",
+      "themes": {
+        "dark": "Tamna",
+        "light": "Svetla",
+        "system": "Sistemska"
+      }
+    },
+    "danger": {
+      "title": "Opasna zona",
+      "clearHistory": "Obriši svu istoriju",
+      "clearHistoryDescription": "Trajno briše sve sačuvane sesije spajanja",
+      "clearHistoryConfirm": "Ova akcija je nepovratna. Obrisati svu istoriju?",
+      "deleteAccount": "Obriši nalog",
+      "deleteAccountDescription": "Trajno briše vaš nalog i sve podatke",
+      "deleteAccountConfirm": "Ova akcija je NEPOVRATNA. Svi vaši podaci će biti trajno obrisani. Nastaviti?",
+      "clearHistorySuccess": "Istorija je obrisana",
+      "deleteAccountSuccess": "Nalog je obrisan"
+    },
+    "save": "Sačuvaj podešavanja",
+    "saveSuccess": "Podešavanja su sačuvana",
+    "saveError": "Greška pri čuvanju podešavanja"
+  },
+  "common": {
+    "loading": "Učitavanje...",
+    "error": "Došlo je do greške",
+    "retry": "Pokušaj ponovo",
+    "cancel": "Otkaži",
+    "confirm": "Potvrdi",
+    "save": "Sačuvaj",
+    "delete": "Obriši",
+    "edit": "Uredi",
+    "back": "Nazad",
+    "next": "Dalje",
+    "close": "Zatvori",
+    "search": "Pretraga",
+    "clear": "Obriši",
+    "noData": "Nema podataka",
+    "selectAll": "Izaberi sve",
+    "deselectAll": "Poništi izbor",
+    "copied": "Kopirano!",
+    "products": "proizvoda",
+    "files": "fajlova",
+    "rows": "redova",
+    "currency": {
+      "din": "din",
+      "eur": "€",
+      "usd": "$"
+    },
+    "undo": "Opozovi",
+    "undoPrice": "Opozovi izmenu cene",
+    "sortAsc": "Sortiraj rastuće",
+    "sortDesc": "Sortiraj opadajuće"
+  },
+  "errors": {
+    "parseFailed": "Parsovanje nije uspelo",
+    "noValidRows": "Nisu pronađeni validni redovi u fajlu",
+    "fileTooBig": "Fajl je prevelik (max 10MB)",
+    "unsupportedFormat": "Nepodržani format fajla",
+    "networkError": "Greška mreže. Proverite internet vezu.",
+    "unauthorized": "Niste prijavljeni",
+    "notFound": "Stranica nije pronađena",
+    "generic": "Došlo je do neočekivane greške"
+  },
+  "toast": {
+    "sessionSaved": "Sesija je sačuvana",
+    "sessionLoaded": "Sesija je učitana",
+    "exportDone": "Fajl je preuzet",
+    "priceSaved": "Cena je ažurirana",
+    "priceUndo": "Izmena cene je poništena",
+    "allPricesFilled": "Cena je primenjena na {count} proizvoda"
+  }
+}
