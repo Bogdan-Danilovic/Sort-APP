@@ -179,14 +179,14 @@ export default function FileUploadZone({ onFilesAdded, isLoading = false }: File
               transition={{ repeat: Infinity, duration: 1.1, ease: 'easeInOut' }}
               className="w-14 h-14 rounded-2xl flex items-center justify-center"
               style={{
-                background: 'rgba(245,158,11,0.15)',
-                border: '1px solid rgba(245,158,11,0.3)',
-                boxShadow: '0 0 20px rgba(245,158,11,0.25)',
+                background: 'rgba(58,129,246,0.15)',
+                border: '1px solid rgba(58,129,246,0.3)',
+                boxShadow: '0 0 20px rgba(58,129,246,0.3)',
               }}
             >
-              <Upload size={24} style={{ color: 'var(--accent)' }} />
+              <Upload size={24} style={{ color: '#3a81f6' }} />
             </motion.div>
-            <p className="font-semibold tracking-wide" style={{ color: 'var(--accent)' }}>
+            <p className="font-semibold tracking-wide" style={{ color: '#91c5ff' }}>
               {t('dropzoneActive')}
             </p>
           </motion.div>
@@ -218,18 +218,18 @@ export default function FileUploadZone({ onFilesAdded, isLoading = false }: File
           >
             {/* Icon */}
             <div
-              className="w-12 h-12 rounded-2xl flex items-center justify-center transition-colors duration-200"
-              style={{ background: 'var(--bg-2)', border: '1px solid var(--border)' }}
+              className="w-14 h-14 rounded-2xl flex items-center justify-center"
+              style={{ background: '#111111', border: '1px solid #262626' }}
             >
-              <Upload size={20} style={{ color: 'var(--text-3)' }} />
+              <Upload size={24} style={{ color: '#3a81f6' }} />
             </div>
 
             {/* Labels */}
             <div className="flex flex-col items-center gap-1.5">
-              <p className="font-semibold text-sm" style={{ color: 'var(--text-1)', fontFamily: 'var(--font-jakarta)' }}>
+              <p className="font-semibold text-sm" style={{ color: '#fafafa' }}>
                 {t('dropzone')}
               </p>
-              <p className="text-xs" style={{ color: 'var(--text-3)' }}>
+              <p className="text-xs" style={{ color: '#a1a1a1' }}>
                 {t('dropzoneHint')}
               </p>
             </div>
@@ -240,7 +240,7 @@ export default function FileUploadZone({ onFilesAdded, isLoading = false }: File
                 <span
                   key={ext}
                   className="flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-mono font-medium"
-                  style={{ background: 'var(--bg-2)', border: '1px solid var(--border)', color: 'var(--text-3)' }}
+                  style={{ background: '#1a1a1a', border: '1px solid #262626', color: '#a1a1a1' }}
                 >
                   {ext === '.csv' || ext === '.xlsx'
                     ? <FileSpreadsheet size={10} />
@@ -256,15 +256,15 @@ export default function FileUploadZone({ onFilesAdded, isLoading = false }: File
               type="button"
               className="text-xs font-semibold px-4 py-2 mt-1 rounded-lg transition-all duration-200 cursor-pointer"
               style={{
-                background: 'rgba(245,158,11,0.1)',
-                color: 'var(--accent)',
-                border: '1px solid rgba(245,158,11,0.2)',
+                background: 'rgba(58,129,246,0.1)',
+                color: '#91c5ff',
+                border: '1px solid rgba(58,129,246,0.2)',
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.background = 'rgba(245,158,11,0.18)';
+                (e.currentTarget as HTMLElement).style.background = 'rgba(58,129,246,0.18)';
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.background = 'rgba(245,158,11,0.1)';
+                (e.currentTarget as HTMLElement).style.background = 'rgba(58,129,246,0.1)';
               }}
               onClick={(e) => { e.stopPropagation(); openPicker(); }}
             >
@@ -272,7 +272,7 @@ export default function FileUploadZone({ onFilesAdded, isLoading = false }: File
             </button>
 
             {/* Paste hint */}
-            <p className="text-[11px] flex items-center gap-1" style={{ color: 'var(--text-3)' }}>
+            <p className="text-[11px] flex items-center gap-1" style={{ color: '#525252' }}>
               <ClipboardPaste size={11} />
               Ctrl+V za lijepljenje teksta
             </p>

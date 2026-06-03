@@ -13,10 +13,10 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
-  Layers,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
+import MergeKitLogo from '@/components/ui/MergeKitLogo';
 
 interface NavItem {
   labelKey: string;
@@ -26,9 +26,9 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { labelKey: 'nav.dashboard', href: 'dashboard', icon: LayoutDashboard },
-  { labelKey: 'nav.merge', href: 'merge', icon: GitMerge },
-  { labelKey: 'nav.history', href: 'history', icon: History },
-  { labelKey: 'nav.settings', href: 'settings', icon: Settings },
+  { labelKey: 'nav.merge',     href: 'merge',     icon: GitMerge },
+  { labelKey: 'nav.history',   href: 'history',   icon: History },
+  { labelKey: 'nav.settings',  href: 'settings',  icon: Settings },
 ];
 
 interface SidebarProps {
@@ -45,7 +45,6 @@ export default function Sidebar({ locale, userEmail }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
 
-  // Persist collapse state
   useEffect(() => {
     const saved = localStorage.getItem('sidebar-collapsed');
     if (saved === 'true') setCollapsed(true);
@@ -65,14 +64,9 @@ export default function Sidebar({ locale, userEmail }: SidebarProps) {
     router.refresh();
   };
 
-  const isActive = (href: string) => {
-    return pathname.includes(`/${locale}/${href}`);
-  };
+  const isActive = (href: string) => pathname.includes(`/${locale}/${href}`);
 
-  // User initials za avatar
-  const initials = userEmail
-    ? userEmail.slice(0, 2).toUpperCase()
-    : 'MK';
+  const initials = userEmail ? userEmail.slice(0, 2).toUpperCase() : 'MK';
 
   return (
     <motion.nav
@@ -81,55 +75,51 @@ export default function Sidebar({ locale, userEmail }: SidebarProps) {
       transition={{ duration: 0.2, ease: 'easeInOut' }}
       style={{ width: collapsed ? 64 : 240 }}
     >
-      {/* Logo */}
+      {/* Logo area */}
       <div
-        className="flex items-center h-12 px-4 border-b"
-        style={{ borderColor: 'var(--border)' }}
+        className="flex items-center h-[52px] px-4 flex-shrink-0"
+        style={{ borderBottom: '1px solid #1f1f1f' }}
       >
-        <div className="flex items-center gap-2 flex-1 min-w-0">
-          <div
-            className="flex-shrink-0 w-7 h-7 rounded-md flex items-center justify-center"
-            style={{ background: 'var(--accent)' }}
-          >
-            <Layers size={14} strokeWidth={2.5} className="text-white" />
-          </div>
-
-          <AnimatePresence>
-            {!collapsed && (
-              <motion.span
-                initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: 'auto' }}
-                exit={{ opacity: 0, width: 0 }}
-                transition={{ duration: 0.15 }}
-                className="font-mono font-semibold text-sm tracking-tight overflow-hidden whitespace-nowrap"
-                style={{ color: 'var(--text-1)' }}
+        <div className="flex items-center flex-1 min-w-0">
+          <AnimatePresence mode="wait">
+            {collapsed ? (
+              <motion.div
+                key="icon"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
               >
-                MergeKit
-              </motion.span>
+                <MergeKitLogo locale={locale} iconOnly />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="full"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.1 }}
+              >
+                <MergeKitLogo locale={locale} />
+              </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        {/* Collapse toggle */}
         <button
           onClick={toggleCollapsed}
-          className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded transition-colors"
-          style={{ color: 'var(--text-3)' }}
-          aria-label={
-            collapsed ? t('nav.expand') : t('nav.collapse')
-          }
-          title={collapsed ? t('nav.expand') : t('nav.collapse')}
+          className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded transition-colors cursor-pointer"
+          style={{ color: '#525252' }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = '#a1a1a1'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = '#525252'; }}
+          aria-label={collapsed ? t('nav.expand') : t('nav.collapse')}
         >
-          {collapsed ? (
-            <ChevronRight size={14} strokeWidth={2} />
-          ) : (
-            <ChevronLeft size={14} strokeWidth={2} />
-          )}
+          {collapsed ? <ChevronRight size={13} /> : <ChevronLeft size={13} />}
         </button>
       </div>
 
       {/* Nav items */}
-      <nav className="flex-1 py-3 overflow-hidden">
+      <nav className="flex-1 py-3 overflow-y-auto overflow-x-hidden">
         <ul className="space-y-0.5">
           {NAV_ITEMS.map((item) => {
             const active = isActive(item.href);
@@ -147,11 +137,10 @@ export default function Sidebar({ locale, userEmail }: SidebarProps) {
                     size={16}
                     strokeWidth={active ? 2.5 : 2}
                     style={{
-                      color: active ? 'var(--accent)' : 'var(--text-3)',
+                      color: active ? '#3a81f6' : '#a1a1a1',
                       flexShrink: 0,
                     }}
                   />
-
                   <AnimatePresence>
                     {!collapsed && (
                       <motion.span
@@ -173,17 +162,14 @@ export default function Sidebar({ locale, userEmail }: SidebarProps) {
       </nav>
 
       {/* User section */}
-      <div
-        className="border-t p-3 flex-shrink-0"
-        style={{ borderColor: 'var(--border)' }}
-      >
+      <div className="flex-shrink-0 p-3" style={{ borderTop: '1px solid #1f1f1f' }}>
         <div className="flex items-center gap-2 mb-2">
-          {/* Avatar */}
+          {/* Gradient avatar */}
           <div
-            className="w-7 h-7 rounded-md flex-shrink-0 flex items-center justify-center text-xs font-semibold"
+            className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold"
             style={{
-              background: 'rgba(245, 158, 11, 0.15)',
-              color: 'var(--accent)',
+              background: 'linear-gradient(135deg, #1a4eda, #3a81f6)',
+              color: '#ffffff',
             }}
           >
             {initials}
@@ -198,10 +184,7 @@ export default function Sidebar({ locale, userEmail }: SidebarProps) {
                 transition={{ duration: 0.1 }}
                 className="flex-1 min-w-0"
               >
-                <p
-                  className="text-xs truncate font-medium"
-                  style={{ color: 'var(--text-2)' }}
-                >
+                <p className="text-xs truncate" style={{ color: '#a1a1a1' }}>
                   {userEmail ?? 'Korisnik'}
                 </p>
               </motion.div>
@@ -209,19 +192,14 @@ export default function Sidebar({ locale, userEmail }: SidebarProps) {
           </AnimatePresence>
         </div>
 
-        {/* Logout */}
         <button
           onClick={handleSignOut}
           disabled={signingOut}
           className="nav-item w-full text-left"
           title={collapsed ? t('nav.logout') : undefined}
-          style={{ margin: 0 }}
+          style={{ margin: 0, opacity: signingOut ? 0.5 : 1 }}
         >
-          <LogOut
-            size={15}
-            strokeWidth={2}
-            style={{ color: 'var(--text-3)', flexShrink: 0 }}
-          />
+          <LogOut size={15} style={{ color: '#a1a1a1', flexShrink: 0 }} />
           <AnimatePresence>
             {!collapsed && (
               <motion.span
@@ -230,7 +208,7 @@ export default function Sidebar({ locale, userEmail }: SidebarProps) {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.1 }}
                 className="text-xs"
-                style={{ color: 'var(--text-3)' }}
+                style={{ color: '#a1a1a1' }}
               >
                 {signingOut ? 'Odjavljivanje...' : t('nav.logout')}
               </motion.span>

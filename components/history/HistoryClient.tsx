@@ -139,15 +139,15 @@ export default function HistoryClient({
             placeholder={t('searchPlaceholder')}
             className="w-full pl-9 pr-3 py-1.5 rounded-md text-sm focus:outline-none transition-colors"
             style={{
-              background: 'var(--bg-2)',
-              border: '1px solid var(--border)',
-              color: 'var(--text-1)',
+              background: '#111111',
+              border: '1px solid #262626',
+              color: '#fafafa',
             }}
             onFocus={(e) => {
-              e.target.style.borderColor = 'var(--accent)';
+              e.target.style.borderColor = '#3a81f6';
             }}
             onBlur={(e) => {
-              e.target.style.borderColor = 'var(--border)';
+              e.target.style.borderColor = '#262626';
             }}
           />
         </div>
@@ -251,10 +251,7 @@ export default function HistoryClient({
       {filteredSessions.length === 0 ? (
         <div
           className="py-16 text-center rounded-lg"
-          style={{
-            background: 'var(--bg-2)',
-            border: '1px solid var(--border)',
-          }}
+          style={{ background: '#111111', border: '1px solid #1f1f1f' }}
         >
           {sessions.length === 0 ? (
             <>

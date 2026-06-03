@@ -43,12 +43,9 @@ export default function ParsedPreview({
     return (
       <div
         className="text-center py-12 rounded-lg"
-        style={{
-          background: 'var(--bg-2)',
-          border: '1px solid var(--border)',
-        }}
+        style={{ background: '#111111', border: '1px solid #1f1f1f' }}
       >
-        <p style={{ color: 'var(--text-3)' }}>Nema parsovanih fajlova</p>
+        <p style={{ color: '#525252' }}>Nema parsovanih fajlova</p>
       </div>
     );
   }
@@ -66,21 +63,18 @@ export default function ParsedPreview({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: fileIdx * 0.05 }}
             className="rounded-lg overflow-hidden"
-            style={{
-              border: '1px solid var(--border)',
-              background: 'var(--bg-1)',
-            }}
+            style={{ border: '1px solid #1f1f1f', background: '#0a0a0a' }}
           >
             {/* Section header */}
             <div
               className="flex items-center gap-3 px-4 py-3 cursor-pointer"
-              style={{ background: 'var(--bg-2)' }}
+              style={{ background: '#111111', borderRadius: '12px 12px 0 0' }}
               onClick={() => toggleExpanded(fileIdx)}
             >
               <button
                 type="button"
                 className="flex-shrink-0"
-                style={{ color: 'var(--text-3)' }}
+                style={{ color: '#525252' }}
               >
                 {isOpen ? (
                   <ChevronDown size={14} strokeWidth={2} />
@@ -90,8 +84,8 @@ export default function ParsedPreview({
               </button>
 
               <span
-                className="font-medium text-sm flex-1 truncate"
-                style={{ color: 'var(--text-1)' }}
+                className="font-mono text-sm flex-1 truncate"
+                style={{ color: '#a1a1a1' }}
               >
                 {file.filename}
               </span>

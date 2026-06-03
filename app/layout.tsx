@@ -38,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="sr" className={`${jakarta.variable} ${dmSans.variable} ${jetbrains.variable}`} suppressHydrationWarning>
+    <html lang="sr" className={`dark ${jakarta.variable} ${dmSans.variable} ${jetbrains.variable}`} suppressHydrationWarning>
       <head>
         <link
           rel="preconnect"

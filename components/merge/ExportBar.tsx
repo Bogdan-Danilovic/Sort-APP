@@ -111,9 +111,9 @@ export default function ExportBar({ products, totals, companyName, onSave }: Exp
             disabled={disabled}
             className="flex items-center gap-2 px-4 rounded-lg text-sm font-semibold transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
             style={{
-              background: disabled ? 'rgba(245,158,11,0.06)' : 'rgba(245,158,11,0.14)',
-              color: 'var(--accent)',
-              border: '1px solid rgba(245,158,11,0.25)',
+              background: disabled ? 'rgba(58,129,246,0.06)' : 'rgba(58,129,246,0.12)',
+              color: '#91c5ff',
+              border: '1px solid rgba(58,129,246,0.25)',
               height: 40,
               minWidth: 44,
             }}
@@ -148,9 +148,9 @@ export default function ExportBar({ products, totals, companyName, onSave }: Exp
                 transition={SPRING}
                 className="absolute right-0 bottom-full mb-2 z-40 rounded-xl overflow-hidden py-1.5"
                 style={{
-                  background: 'var(--bg-3)',
-                  border: '1px solid var(--border)',
-                  boxShadow: '0 -8px 32px rgba(0,0,0,0.5)',
+                  background: '#111111',
+                  border: '1px solid #1f1f1f',
+                  boxShadow: '0 -8px 32px rgba(0,0,0,0.8)',
                   minWidth: 200,
                 }}
               >

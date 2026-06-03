@@ -86,15 +86,12 @@ export default function MergedTable({
     return (
       <div
         className="py-16 text-center rounded-lg"
-        style={{
-          background: 'var(--bg-2)',
-          border: '1px solid var(--border)',
-        }}
+        style={{ background: '#111111', border: '1px solid #1f1f1f' }}
       >
-        <p className="font-medium mb-1" style={{ color: 'var(--text-2)' }}>
+        <p className="font-medium mb-1" style={{ color: '#a1a1a1' }}>
           {t('noResults')}
         </p>
-        <p className="text-xs" style={{ color: 'var(--text-3)' }}>
+        <p className="text-xs" style={{ color: '#525252' }}>
           {t('noResultsHint')}
         </p>
       </div>
@@ -104,7 +101,7 @@ export default function MergedTable({
   return (
     <div
       className="rounded-lg overflow-hidden"
-      style={{ border: '1px solid var(--border)' }}
+      style={{ border: '1px solid #1f1f1f' }}
     >
       <div
         className="overflow-auto"

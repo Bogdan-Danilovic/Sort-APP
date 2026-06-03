@@ -13,8 +13,8 @@ export default function AppShell({ children, locale, userEmail }: AppShellProps)
       <Sidebar locale={locale} userEmail={userEmail} />
 
       <main className="app-main">
-        {/* pb uzima u obzir dock visinu (72px) + gap (16px) + buffer na mobilnom */}
-        <div className="min-h-full p-4 md:p-6" style={{ paddingBottom: 'calc(var(--dock-h) + var(--dock-gap) + 24px)' }}>
+        {/* pb na mobilnom = 60px dock + safe area + buffer */}
+        <div className="min-h-full p-4 md:p-6" style={{ paddingBottom: 'calc(var(--dock-h) + env(safe-area-inset-bottom) + 16px)' }}>
           {children}
         </div>
       </main>
